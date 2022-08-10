@@ -1,0 +1,27 @@
+---
+title: "prr_Gruppenarbeit_1"
+author: "Si Ben Tran, Patrick Schürmann"
+date: '2022-08-10'
+output: pdf_document
+---
+
+# Bibliotheken Laden
+```{r}
+library(tidyverse)
+```
+# Datensatz einer Variabel zuweisen und ausgeben
+```{r}
+mpg_dataset <- mpg
+mpg_dataset
+```
+# Kopfzeile ausgeben
+```{r}
+head(mpg_dataset)
+```
+# Fusszeile ausgeben
+```{r}
+tail(mpg_dataset)
+```
+
+
+

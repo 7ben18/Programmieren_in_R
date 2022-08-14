@@ -4,4 +4,4 @@
 
 - Gruppenarbeit_02
 
-In Zusammenarbeit mit Patrik Schürmann
+In Zusammenarbeit mit Patrick Schürmann

@@ -1,0 +1,40 @@
+---
+title: "prr Gruppenarbeit 2"
+output: html_notebook
+---
+# Einleitung
+Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020.
+
+# Hypothese / Fragestellungen
+1) Könnte man im Winter mit Solarpanels etwa gleich viel Strom wie im Sommer produzieren?
+2) Kann man anhand des Luftdrucks eine rudimentäre Wettervorhersage erstellen?
+3) Was sind die idealen Wetterbedingungen für maximale Stromproduktion anhand Solarpanels?
+4) Wie sind die Korrelationen zwischen den verschiedenen Variablen
+5) Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus.
+
+
+# Libraries importieren
+```{r}
+library(tidyverse)
+```
+
+# Data Wrangling
+```{r}
+data <- read.csv(file = "Meteodaten.csv", sep = ';')
+data <- data %>% select(time, 
+                        "Böenspitze m/s" = fkl010z1, 
+                        "Windgeschwindigkeit m/s" = fkl010za, 
+                        "Windrichtung Grad" = dkl010za, 
+                        "Sonnenscheindauer min" = sre000z0, 
+                        "Gesamtbewölkung octas" = nto000s0,
+                        "Langwellige Einstrahlung W/m^2" = oli000z0,
+                        "Luftfeuchtigkeit %" = ure200s0,  
+                        "Lufttemperatur C" = tre200s0,
+                        "Luftdruck hPa" = prestas0) # Erweiterbar :)
+data$time <- ymd_hm(data$time)
+```
+
+```{r}
+data
+```
+

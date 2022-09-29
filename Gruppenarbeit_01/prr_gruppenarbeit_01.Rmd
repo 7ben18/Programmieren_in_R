@@ -1,0 +1,197 @@
+---
+title: "prr Gruppenarbeit 1"
+output: html_notebook
+---
+
+
+# Einleitung
+Wir beschaeftigen uns mit dem Carseats Datensatz von ISRL2. 
+
+
+# Hypothese / Fragestellungen
+1) Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
+2) Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf?
+3) Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
+4) Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
+
+
+# Installationen
+```{r}
+library(ISLR2)
+library(tidyverse)
+```
+
+# Carseats Datensatz ausgeben und beschreiben
+```{r}
+Carseats
+```
+
+# Beschreibung des Datensatzes
+Sales
+Unit sales (in thousands) at each location
+
+CompPrice
+Price charged by competitor at each location
+
+Income
+Community income level (in thousands of dollars)
+
+Advertising
+Local advertising budget for company at each location (in thousands of dollars)
+
+Population
+Population size in region (in thousands)
+
+Price
+Price company charges for car seats at each site
+
+ShelveLoc
+A factor with levels Bad, Good and Medium indicating the quality of the shelving location for the car seats at each site
+
+Age
+Average age of the local population
+
+Education
+Education level at each location
+
+Urban
+A factor with levels No and Yes to indicate whether the store is in an urban or rural location
+
+US
+A factor with levels No and Yes to indicate whether the store is in the US or not
+
+# Kopfzeile Carseats ausgeben 
+```{r}
+head(Carseats)
+```
+
+# Endes des Datensatzes ausgeben
+```{r}
+tail(Carseats)
+```
+
+# Zusammenfassung von Carseats
+```{r}
+summary(Carseats)
+```
+
+# Visualisierung von Sales Verteilung (Schoener beschreiben)
+```{r}
+ggplot(data = Carseats, aes(x = Sales)) + 
+  geom_histogram() 
+```
+
+# Lineare Regressionsmodell
+
+## Features in einem Scatterplot darstellen (Ausbessern!)
+```{r}
+plot(Sales ~ Income, data = Carseats)
+```
+
+## Modell erstellen
+```{r}
+lm.fit1 <- lm(Sales ~ Income, data = Carseats)
+```
+
+## Modell Methoden 
+Folgende Methoden sind nun fuer die Lineare Regression erstellt worden
+```{r}
+names(lm.fit1)
+```
+### Koeffzienten vom Modell ausgeben
+```{r}
+lm.fit1$coefficients
+```
+### Konfidenzintervall fuer Koeffizienten angeben
+```{r}
+confint(lm.fit1)
+```
+
+### Freiheitsgrade ausgeben
+```{r}
+lm.fit1$df.residual
+```
+
+## Auswertung vom Modell
+```{r}
+summary(lm.fit1)
+```
+Anhand vom P Wert(0.00231) laesst sich feststellen, dass die Steigung siginfikant ist. Entsprechend hat das Einkommen der Region einen Einfluss auf die Verkaufszahlen. 
+Vor einer engueltigen Aussage muessen die Residuen ueberprueft werden.
+
+## Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
+```{r}
+plot(Carseats$Income, Carseats$Sales)
+abline(lm.fit1, col = "red")
+```
+
+## Residuenanalyse (Visualisierung ausbessern)
+Nun, da wir unser Modell haben, können wir feststellen, ob es ein gutes Modell ist, indem wir diese 3 Bedingungen überprüfen:
+
+Der Fehler sollte nicht abhängig sein
+Der Erwartungswert sollte bei 0 liegen.
+Die Residuen sollten einer Normalverteilung folgen
+
+```{r}
+plot(predict(lm.fit1), residuals(lm.fit1))
+
+plot(lm.fit1, which=1)
+```
+
+
+```{r}
+plot(lm.fit1$residuals) # Title hinzuefuegen: Ueberpruefung der abhaengigkeit
+```
+
+```{r}
+hist(lm.fit1$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
+```
+
+Mittelwert der Residuen ist 0. Die Verteilung ist einigermassen Normalverteilt.
+
+## Sales vs. Population
+```{r}
+lm.fit2 <- lm(Sales ~ Population, data = Carseats)
+summary(lm.fit2)
+```
+
+```{r}
+plot(Carseats$Population, Carseats$Sales)
+abline(lm.fit2, col = "red")
+```
+
+## Sales vs. Advertising
+```{r}
+lm.fit3 <- lm(Sales ~ Advertising, data = Carseats)
+summary(lm.fit3)
+```
+
+
+```{r}
+plot(Carseats$Advertising, Carseats$Sales)
+abline(lm.fit3, col = "red")
+```
+
+```{r}
+lm.fit3$residuals
+```
+
+
+```{r}
+plot(lm.fit3$residuals)
+hist(lm.fit3$residuals)
+```
+
+Interperation: Sales ist nicht abhaengig von Advertising. 
+
+
+
+
+
+
+
+
+
+
+
+

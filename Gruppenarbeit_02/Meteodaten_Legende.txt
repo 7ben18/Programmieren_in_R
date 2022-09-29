@@ -1,0 +1,95 @@
+Bundesamt für Meteorologie und Klimatologie, MeteoSchweiz
+Operation Center 1
+Postfach 257
+8058 Zürich-Flughafen
+
+stn yyyyMMddHHmm
+
+stn Stationskürzel
+y   Jahr
+M   Monat
+d   Tag
+H   Stunde
+m   Minute
+
+Zeitangaben in UTC: 00:40 UTC = 02:40 Sommerzeit
+                              = 01:40 Winterzeit
+
+Zeitbezug bei Stundenwerten, sofern in der Parameterbeschreibung nicht anders vermerkt: HH  = (HH-1):01 - HH:00
+Beispiel: 13 = beinhaltet Messperiode von 12:01 bis 13:00 
+
+Fehlende Messwerte sind gekenntzeichnet mit '-'
+
+Qualitätsinformationen: Die Legende zu den Qualitätsinformationen ist zu finden unter: https://gate.meteoswiss.ch/idaweb/text/datenqualitaet_legende_de.pdf
+
+ 
+
+
+
+
+Stationen
+---------
+stn       Name                                 Parameter        Datenquelle                                        Länge/Breite             Koordinaten [km] Höhe ü. M. [m]
+JUN       Jungfraujoch                         uto200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         ns2000s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         ns1000s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         fkl010z1         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         xchills0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pva200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pvd200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tre2desd         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tpp200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tps200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         nto000s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         gor000za         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         gre000z0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         oli000z0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         prestas0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pp0qnhs0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tre200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pvamixs0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         uor200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tpo200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         ure200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         sre000z0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         usp200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pvaices0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         pvawats0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tde200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         tvi200s0         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         fkl010za         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+JUN       Jungfraujoch                         dkl010za         MeteoSchweiz                                       7°59'/46°33'             641938/155287    3571
+
+Parameter
+---------
+          Einheit                              Beschreibung
+uto200s0  g/m³                                 Absolute Luftfeuchtigkeit 2 m über Boden; Momentanwert
+ns2000s0  octas                                Betrag der mittleren Wolken
+ns1000s0  octas                                Betrag der untersten Wolken
+fkl010z1  m/s                                  Böenspitze (Sekundenböe); Maximum
+xchills0  °C                                   Chill Temperatur; Momentanwert
+pva200s0  hPa                                  Dampfdruck 2 m über Boden; Momentanwert
+pvd200s0  hPa                                  Dampfdruckdefizit 2 m über Boden; Momentanwert
+tre2desd  °C                                   Differenz Lufttemperatur 2 m über Boden - Taupunkt; Momentanwert
+tpp200s0  °C                                   Feuchtpotentielle Temperatur 2 m über Boden; Momentanwert
+tps200s0  °C                                   Feuchttemperatur (Psychrometertemperatur) 2 m über Boden; Momentanwert
+nto000s0  octas                                Gesamtbewölkung
+gor000za  W/m²                                 Globalstrahlung; Standardabweichung
+gre000z0  W/m²                                 Globalstrahlung; Zehnminutenmittel
+oli000z0  W/m²                                 Langwellige Einstrahlung; Zehnminutenmittel
+prestas0  hPa                                  Luftdruck auf Barometerhöhe (QFE); Momentanwert
+pp0qnhs0  hPa                                  Luftdruck reduziert auf Meeresniveau mit Standardatmosphäre (QNH); Momentanwert
+tre200s0  °C                                   Lufttemperatur 2 m über Boden; Momentanwert
+pvamixs0  g/kg                                 Mischungsverhältnis
+uor200s0  %                                    Original Luftfeuchtigkeit 2 m über Boden; Momentanwert
+tpo200s0  °C                                   Potentielle Temperatur 2 m über Boden; Momentanwert
+ure200s0  %                                    Relative Luftfeuchtigkeit 2 m über Boden; Momentanwert
+sre000z0  min                                  Sonnenscheindauer; Zehnminutensumme
+usp200s0  g/kg                                 Spezifische Luftfeuchtigkeit 2 m über Boden; Momentanwert
+pvaices0  hPa                                  Sättigungsdampfdruck über Eis; Momentanwert
+pvawats0  hPa                                  Sättigungsdampfdruck über Wasser; Momentanwert
+tde200s0  °C                                   Taupunkt 2 m über Boden; Momentanwert
+tvi200s0  °C                                   Virtuelle Temperatur 2 m über Boden; Momentanwert
+fkl010za  m/s                                  Windgeschwindigkeit skalar; Standardabweichung
+dkl010za  °                                    Windrichtung; Standardabweichung
+

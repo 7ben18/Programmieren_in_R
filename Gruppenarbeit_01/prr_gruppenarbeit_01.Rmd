@@ -107,7 +107,7 @@ lm.fit1$coefficients
 confint(lm.fit1)
 ```
 
-### Freiheitsgrade ausgeben
+### Freiheitsgrade ausgeben ???
 ```{r}
 lm.fit1$df.residual
 ```
@@ -121,7 +121,7 @@ Vor einer engueltigen Aussage muessen die Residuen ueberprueft werden.
 
 ## Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
-plot(Carseats$Income, Carseats$Sales)
+plot(Sales ~ Income, data = Carseats)
 abline(lm.fit1, col = "red")
 ```
 
@@ -133,15 +133,10 @@ Der Erwartungswert sollte bei 0 liegen.
 Die Residuen sollten einer Normalverteilung folgen
 
 ```{r}
-plot(predict(lm.fit1), residuals(lm.fit1))
-
 plot(lm.fit1, which=1)
 ```
 
 
-```{r}
-plot(lm.fit1$residuals) # Title hinzuefuegen: Ueberpruefung der abhaengigkeit
-```
 
 ```{r}
 hist(lm.fit1$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
@@ -156,7 +151,7 @@ summary(lm.fit2)
 ```
 
 ```{r}
-plot(Carseats$Population, Carseats$Sales)
+plot(Sales ~ Population, data = Carseats)
 abline(lm.fit2, col = "red")
 ```
 
@@ -168,25 +163,25 @@ summary(lm.fit3)
 
 
 ```{r}
-plot(Carseats$Advertising, Carseats$Sales)
+plot(Sales ~ Advertising, data = Carseats)
 abline(lm.fit3, col = "red")
 ```
 
+
 ```{r}
-lm.fit3$residuals
+plot(lm.fit3, which=1)
+```
+
+```{r}
+hist(lm.fit3$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```
 
 
-```{r}
-plot(lm.fit3$residuals)
-hist(lm.fit3$residuals)
-```
-
-Interperation: Sales ist nicht abhaengig von Advertising. 
+Interperation: Sales ist nicht abhaengig von Advertising. Erkennbar im Tukeyanscombe Plot, Histogramm ist irreführend.
 
 
 
-
+# Multiple lineare Regressionsmodell
 
 
 

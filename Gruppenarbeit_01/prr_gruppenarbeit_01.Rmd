@@ -1,154 +1,178 @@
 ---
-title: "prr Gruppenarbeit 1"
-output: html_notebook
+title: "Programmieren in R: Abgabe 1"
+author: "Gabriel Torres Gamez, Si Ben Tran, Patrick Schürmann"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 
-# Einleitung
-Wir beschaeftigen uns mit dem Carseats Datensatz von ISRL2. 
+# Lineare und logistische Regressionen in R
+
+Für die erste Abgabe im Modul PRR beschäftigen wir uns mit (multiplen) linearen und logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an. Datensatz von ISRL2.
+
+Wir haben uns für diese Methoden entschieden, weil sie ein zentraler Bestandteil von Data Science sind. Sie wird verwendet, um Zusammenhängen in Datensätze zu verstehen und um Prognosen erstellen zu können. Diese Regressionen sind im R Grundpakte enthalten. Es muss also keine separate Library installiert und geladen werden.
+
+Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statistical Learning" verwendet wird. Dieses Buch erarbeiten wir in diesem Studiengang im Modul "Statistisches Lernen". Dort wird er zwar hauptsächlich angewendet um Decision Trees zu erstellen. Dank 11 Variablen und 400 Observationen eignet er sich aber auch gut für Regressionen. Für eine genau Erklärung der Variablen verweisen wir auf die Homepage https://rdrr.io/cran/ISLR2/man/Carseats.html. Für die unten stehenden Hypothesen werden wir mit folgenden Variablen arbeiten:
+
+- Sales: Verkaufte Anzahl Kindersitze pro Standort in 1'000 Stück
+- Income: Das Lohnniveau der Einzugsgebiete der Standorte in 1'000 Dollar
+- Advertising: Lokale Marketingausgaben in 1'000 Dollar
+- Population: Bevölkerungsgrösse der Standorte in 1'000 Personen
+- CompPrice: Die Preise für Kindersitze der lokalen Konkurrenten
+- Price: Preis pro Kindersitz an den Standorten
+- Urban: Klassifikation, ob sich der Standort in einer städtischen oder ländlichen Region befindet
 
 
-# Hypothese / Fragestellungen
+## Hypothesen
+
+Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
+
 1) Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
 2) Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf?
 3) Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
 4) Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
 
 
-# Installationen
+## Installationen
+
+Folgende Libraries müssen installiert und geladen werden:
 ```{r}
 library(ISLR2)
 library(tidyverse)
 ```
+In der Library ISLR2 befindet sich der Datensatz und Tidyverse wird für die Darstellung des Datensatzes und Visualisierungen benötigt.
 
-# Carseats Datensatz ausgeben und beschreiben
-```{r}
-Carseats
-```
 
-# Beschreibung des Datensatzes
-Sales
-Unit sales (in thousands) at each location
+## Datensatz Carseats
 
-CompPrice
-Price charged by competitor at each location
-
-Income
-Community income level (in thousands of dollars)
-
-Advertising
-Local advertising budget for company at each location (in thousands of dollars)
-
-Population
-Population size in region (in thousands)
-
-Price
-Price company charges for car seats at each site
-
-ShelveLoc
-A factor with levels Bad, Good and Medium indicating the quality of the shelving location for the car seats at each site
-
-Age
-Average age of the local population
-
-Education
-Education level at each location
-
-Urban
-A factor with levels No and Yes to indicate whether the store is in an urban or rural location
-
-US
-A factor with levels No and Yes to indicate whether the store is in the US or not
-
-# Kopfzeile Carseats ausgeben 
+### Kopfzeile Carseats ausgeben 
 ```{r}
 head(Carseats)
 ```
 
-# Endes des Datensatzes ausgeben
+### Endes des Datensatzes ausgeben
 ```{r}
 tail(Carseats)
 ```
 
-# Zusammenfassung von Carseats
+### Zusammenfassung von Carseats
 ```{r}
 summary(Carseats)
 ```
 
-# Visualisierung von Sales Verteilung (Schoener beschreiben)
+Der Datensatz enthält keine fehlende Werte. Die Aufbereitung der Daten entfällt deshalb.
+
+
+### Histogramm der Verkäufe
+
+Dieses eignet sich, um ein Verständnis der Verteilung der Verkäufe zu erhalten.
+
 ```{r}
 ggplot(data = Carseats, aes(x = Sales)) + 
   geom_histogram() 
 ```
 
-# Lineare Regressionsmodell
+## Hypothese 1
 
-## Features in einem Scatterplot darstellen (Ausbessern!)
+### Visualisierung
+
+Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
+
 ```{r}
 plot(Sales ~ Income, data = Carseats)
 ```
 
-## Modell erstellen
+### Modell erstellen
+
+Mit dem Befehl "lm() wird das Modell erstellt und trainiert.
+
 ```{r}
 lm.fit1 <- lm(Sales ~ Income, data = Carseats)
 ```
 
-## Modell Methoden 
-Folgende Methoden sind nun fuer die Lineare Regression erstellt worden
+### Auswertung vom Modell
+
+R hat nun die linear Regression berechnet. Die wichtigsten Werte lassen sich mit der Funktion summary() anzeigen.
+
+```{r}
+summary(lm.fit1)
+```
+Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Einkommen steigt der Verkauf um 15 Stück. Dies erscheint im Verhältnis zum Intercept nach wenig, es müsste darüber diskutiert werden, ob dieser Erkenntnis für einen möglichen Kunden aussagekräftig ist. Anhand vom P Wert(0.00231) lässt sich aber feststellen, dass die Steigung siginfikant ist. Das Einkommen der Region hat also einen Einfluss auf die Verkaufszahlen. Vor einer endültigen Aussage müssen aber weitere Untersuchungen, wie die Überprüfung der Residuen, durchgeführt werden.
+
+Diese Untersuchung führen wir später durch. Vorab stellen wir weitere Methoden der linearen Regression vor.
+
+### Modell Methoden
+
+Das Modell enthält weitere Berechnungen und Kennzahlen. Names() zeigt eine Übersicht dieser.
+
 ```{r}
 names(lm.fit1)
 ```
+
 ### Koeffzienten vom Modell ausgeben
+
+Die oben ersichtlichen Koeffizienten lassen sich direkt via $coefficients abrufen.
+
 ```{r}
 lm.fit1$coefficients
 ```
 ### Konfidenzintervall fuer Koeffizienten angeben
+
+Wertvoll ist die Berechnung der Konfidenzintervalle, die im Summary nicht angezeigt wird. Diese gibt an, in welchem Bereich sich die Koeffizienten mit einer Wahrscheinlichkeit von 5% befinden.
+
 ```{r}
 confint(lm.fit1)
 ```
 
-### Freiheitsgrade ausgeben ???
-```{r}
-lm.fit1$df.residual
-```
-
-## Auswertung vom Modell
-```{r}
-summary(lm.fit1)
-```
-Anhand vom P Wert(0.00231) laesst sich feststellen, dass die Steigung siginfikant ist. Entsprechend hat das Einkommen der Region einen Einfluss auf die Verkaufszahlen. 
-Vor einer engueltigen Aussage muessen die Residuen ueberprueft werden.
 
 ## Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
+
+Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot wird die Steigung ersichtlich, man sieht aber auch die starke Streuung.
+
 ```{r}
 plot(Sales ~ Income, data = Carseats)
 abline(lm.fit1, col = "red")
 ```
 
-## Residuenanalyse (Visualisierung ausbessern)
-Nun, da wir unser Modell haben, können wir feststellen, ob es ein gutes Modell ist, indem wir diese 3 Bedingungen überprüfen:
+### Residuenanalyse (Visualisierung ausbessern)
+Nun, da wir unser Modell haben, können wir feststellen, ob es ein gutes Modell ist, indem wir bei den Residuen folgende 3 Bedingungen überprüfen:
 
 Der Fehler sollte nicht abhängig sein
 Der Erwartungswert sollte bei 0 liegen.
 Die Residuen sollten einer Normalverteilung folgen
 
+Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median der Residuen entspricht -0.18, dieses Kriterium ist erfüllt.
+
+Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
+
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
+
 ```{r}
-plot(lm.fit1, which=1)
+par(mfrow = c(2, 2))
+plot(lm.fit1)  
 ```
 
-
+Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen. Im folgenden Plot ist ersichtlich, dass die Verteilung einigermassen normalverteilt ist.
 
 ```{r}
 hist(lm.fit1$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```
 
-Mittelwert der Residuen ist 0. Die Verteilung ist einigermassen Normalverteilt.
+Wir werden nun das Modell für die Variablen Population und Advertising durchführen. Danach folgt eine Interpretation der Resultate und Erkenntnisse.
 
-## Sales vs. Population
+
+### Sales vs. Population
+
+Da für die weiteren beiden Modelle die gleichen Untersuchungen durchgeführt werden, kommentieren wir diese nicht mehr ausführlich.
+
 ```{r}
 lm.fit2 <- lm(Sales ~ Population, data = Carseats)
 summary(lm.fit2)
 ```
+
+Die Einfluss der Population ist nicht signifikant. Der folgende Plot bestätigt, dass die Steigung 0 beträgt. Wir werden diese Variable deshalb nicht weiter untersuchen.
 
 ```{r}
 plot(Sales ~ Population, data = Carseats)
@@ -175,7 +199,7 @@ plot(lm.fit3, which=1)
 ```{r}
 hist(lm.fit3$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```
-
+### Interpretation
 
 Interperation: Sales ist nicht abhaengig von Advertising. Erkennbar im Tukeyanscombe Plot, Histogramm ist irreführend.
 

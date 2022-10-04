@@ -15,26 +15,50 @@ Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben d
 
 # Libraries importieren
 ```{r}
+library(lubridate)
 library(tidyverse)
 ```
 
 # Data Wrangling
 ```{r}
-data <- read.csv(file = "Meteodaten.csv", sep = ';')
-data <- data %>% select(time, 
-                        "Böenspitze m/s" = fkl010z1, 
-                        "Windgeschwindigkeit m/s" = fkl010za, 
-                        "Windrichtung Grad" = dkl010za, 
-                        "Sonnenscheindauer min" = sre000z0, 
-                        "Gesamtbewölkung octas" = nto000s0,
-                        "Langwellige Einstrahlung W/m^2" = oli000z0,
-                        "Luftfeuchtigkeit %" = ure200s0,  
-                        "Lufttemperatur C" = tre200s0,
-                        "Luftdruck hPa" = prestas0) # Erweiterbar :)
+data <- read.csv(file = "Meteodaten.csv", sep = ";")
+data <- data %>%
+  select(time,
+    "Böenspitze" = fkl010z1, # in Meter/Sekunde
+    "Windgeschwindigkeit" = fkl010za, # in Meter/Sekunde
+    "Windrichtung" = dkl010za, # in Grad
+    "Sonnenscheindauer" = sre000z0, # in Minuten
+    "Gesamtbewölkung" = nto000s0, # in octas
+    "LangwelligeEinstrahlung" = oli000z0, # in Watt pro Quadratmeter
+    "Luftfeuchtigkeit" = ure200s0, # in Prozent
+    "Lufttemperatur" = tre200s0, # in Grad Celsius
+    "Luftdruck" = prestas0 # in Hectopascal
+  ) # Erweiterbar :)
+
 data$time <- ymd_hm(data$time)
+data$Böenspitze <- as.numeric(data$Böenspitze)
+data$Windgeschwindigkeit <- as.numeric(data$Windgeschwindigkeit)
+data$Windrichtung <- as.numeric(data$Windrichtung)
+data$Sonnenscheindauer <- as.numeric(data$Sonnenscheindauer)
+data$Gesamtbewölkung <- as.numeric(data$Gesamtbewölkung)
+data$LangwelligeEinstrahlung <- as.numeric(data$LangwelligeEinstrahlung)
+data$Luftfeuchtigkeit <- as.numeric(data$Luftfeuchtigkeit)
+data$Lufttemperatur <- as.numeric(data$Lufttemperatur)
+data$Luftdruck <- as.numeric(data$Luftdruck)
 ```
 
 ```{r}
-data
-```
+plot1 <- data %>%
+  group_by(time = as.Date(time)) %>%
+  summarize(
+    min_Lufttemperatur = min(Lufttemperatur),
+    max_Lufttemperatur = max(Lufttemperatur)
+  ) %>%
+  drop_na()
 
+ggplot(plot1, aes(x = time)) +
+  geom_smooth(aes(y = max_Lufttemperatur))
+
+ggplot(plot1, aes(x = time)) +
+  geom_smooth(aes(y = min_Lufttemperatur))
+```

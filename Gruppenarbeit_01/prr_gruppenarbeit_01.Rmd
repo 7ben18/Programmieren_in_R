@@ -101,7 +101,8 @@ ggplot(data = Carseats, aes(x = Sales, fill = Urban)) +
 #### Multiplots Verteilungen
 ```{r}
 ggplot(Carseats, aes(x = Sales, fill = US)) + 
-  geom_density(alpha = 0.5) + 
+  geom_density(alpha = 0.5) +
+  facet_grid(Urban  ~ ShelveLoc)
 ```
 
 
@@ -236,13 +237,76 @@ hist(lm.fit3$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 Interperation: Sales ist nicht abhaengig von Advertising. Erkennbar im Tukeyanscombe Plot, Histogramm ist irreführend.
 
 
+## Hypothese 2
+
+Hinzufügen einer Spalte mit der Differenz zwischen unserem Preis und der der Konkurrenz.
+```{r}
+Carseats <- Carseats %>% mutate(DiffPrice = Price - CompPrice) 
+str(Carseats)
+```
+
 
 # Multiple lineare Regressionsmodell
 
+## Hypothese 3
+
+Ist Sales durch mehrere Features abhaengig?
+
+```{r}
+mlr.fit1 <- lm(Sales ~ Income + Population, data = Carseats)
+summary(mlr.fit1)
+```
+
+```{r}
+mlr.fit2 <- lm(Sales ~ Income * Population, data = Carseats)
+summary(mlr.fit2)
+```
+
+```{r}
+mlr.fit3 <- lm(Sales ~ ., data = Carseats)
+summary(mlr.fit3)
+```
+Kommentar: Population hat definitv keinen Einfluss auf Sales, wir überprüfen deshalb andere Variablen.
+DiffPrice haben wir als Differenz von CompPrice und Price berechnet. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Deshalb weist es ein NA aus. 
+
+```{r}
+mlr.fit4 <- lm(Sales ~ Income + Advertising + ShelveLoc + Age + DiffPrice, data = Carseats)
+summary(mlr.fit4)
+```
+Durch die Auswahl der aussagekräftigsten Variabeln konnten wir ein Modell erstellen, dass Sales zuverlässig erklärt. Die verwendeten Variabeln haben wir aus dem Modell, das alle Features verwendet, entnommen. Diese haben dort den tiefsten P-Wert.
+
+### Analyse der Residuen
+
+```{r}
+par(mfrow = c(2,2))
+plot(mlr.fit4)
+```
+
+```{r}
+hist(mlr.fit4$residuals, main = "Histogramm der Residuen", xlab = "Residuen")
+```
 
 
+#Logistische Regression
+
+## Hypothese 4
+Werden in urbanen Regionen mehr Kindersitze gekauft?
+
+```{r}
+Carseats$Urban <- as.integer(as.character(Carseats$Urban)=="Yes")
+str(Carseats)
+```
 
 
+```{r}
+logreg.fit1 <- glm(Urban ∼ Sales, data = Carseats , family = binomial)
+plot(logreg.fit1)
+```
 
-
+```{r}
+Predicted_data <- data.frame(Sales=seq(min(Carseats$Sales), max(Carseats$Sales),len=500))
+Predicted_data$Urban = predict(logreg.fit1, Predicted_data, type="response")
+plot(Urban ~ Sales, data = Carseats)
+lines(Urban ~ Sales, Predicted_data, lwd=2, col="green")
+```
 

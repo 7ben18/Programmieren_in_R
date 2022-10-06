@@ -30,7 +30,7 @@ Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statisti
 Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
 
 1) Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
-2) Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf?
+2) Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
 3) Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
 4) Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
 
@@ -47,6 +47,12 @@ Tidyverse wird für die Darstellung des Datensatzes und Visualisierungen benöti
 
 ## Datensatz Carseats verstehen
 In einem ersten Schritt ist es wichtig den Datensatz zu verstehen, bevor Visualisierungen und Modelle erstellt werden.
+
+### Daten einlesen
+```{r}
+data(Carseats)
+```
+
 
 ### Kopfzeile Carseats ausgeben 
 ```{r}
@@ -104,8 +110,6 @@ ggplot(Carseats, aes(x = Sales, fill = US)) +
   geom_density(alpha = 0.5) +
   facet_grid(Urban  ~ ShelveLoc)
 ```
-
-
 
 ## Hypothese 1
 
@@ -292,21 +296,84 @@ hist(mlr.fit4$residuals, main = "Histogramm der Residuen", xlab = "Residuen")
 ## Hypothese 4
 Werden in urbanen Regionen mehr Kindersitze gekauft?
 
+### Klassifizierung
+
 ```{r}
-Carseats$Urban <- as.integer(as.character(Carseats$Urban)=="Yes")
-str(Carseats)
+Carseats <- Carseats %>% 
+  mutate(Urban_binaer = recode(Urban, "No" = 0, "Yes" = 1))
+```
+
+### Visualisierung mittels Streudiagramm
+```{r}
+# Plot Predicted data and original data points
+ggplot(Carseats, aes(x=Sales, y=Urban)) + 
+  geom_point() +
+  labs(title = "Streudiagramm")
+```
+Eine Logistische Regression von Urban (Yes, No) ist mittels Sales nicht sinnvoll, da die Streupunkte
+uebereinander liegen.
+
+### Logistisches Modell erstellen
+```{r}
+logreg.fit1 <- glm(Urban_binaer ~ Sales, data = Carseats , family = binomial)
+summary(logreg.fit1)
+```
+Wie Aufgrund der Visualisierung gesehen, ergibt ein logistishes Regressionsmodell einen
+grossen P>|z| Wert. Somit gibt es keinen logistischen Zusammenhang zwischen Sales und Urban. 
+
+### Scatterplot von Urban vs Population
+```{r}
+Carseats %>% 
+  ggplot(aes(x = Sales, y = ShelveLoc)) +
+  geom_point()
+
+# Remove Medium in ShelveLoc
+Carseats_ex_medium <- Carseats %>% filter(ShelveLoc != "Medium")
+
+Carseats_ex_medium %>% 
+  ggplot(aes(x = Sales, y = ShelveLoc)) + 
+  geom_point()
+```
+
+### Klassifizierung
+```{r}
+Carseats_ex_medium <- Carseats_ex_medium %>% 
+  mutate(ShelveLoc_binaer = recode(ShelveLoc, "Bad" = 0, "Good" = 1))
+head(Carseats_ex_medium)
+```
+
+### Logistisches Modell fuer ShelveLoc erstellen
+```{r}
+logreg.fit2 <- glm(ShelveLoc_binaer ~ Sales, data = Carseats_ex_medium , family = binomial)
+summary(logreg.fit2)
+```
+
+### Logistische Regression im Streudiagramm visualisieren
+```{r}
+ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) + 
+  geom_point() +
+  stat_smooth(method="glm", formula = y ~ x, color="green", 
+              se = FALSE, method.args = list(family=binomial)) + 
+  geom_vline(xintercept = 7.9633)
+
+
+# Berechnung der Decision Boundary
+-logreg.fit2$coefficients[1] / logreg.fit2$coefficients[2]
+```
+Alle Sales die groesser als 7.9633 sind, werden bei der Logistischen Regression als Gut definiert. 
+
+### Evaluierung vom logistischen Model mittels confusions Matrix
+```{r}
+
+
+
 ```
 
 
-```{r}
-logreg.fit1 <- glm(Urban ∼ Sales, data = Carseats , family = binomial)
-plot(logreg.fit1)
-```
 
-```{r}
-Predicted_data <- data.frame(Sales=seq(min(Carseats$Sales), max(Carseats$Sales),len=500))
-Predicted_data$Urban = predict(logreg.fit1, Predicted_data, type="response")
-plot(Urban ~ Sales, data = Carseats)
-lines(Urban ~ Sales, Predicted_data, lwd=2, col="green")
-```
+
+
+
+
+
 

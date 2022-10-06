@@ -37,42 +37,74 @@ Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
 
 ## Installationen
 
-Folgende Libraries müssen installiert und geladen werden:
 ```{r}
+# Libraries installieren und laden
 library(ISLR2)
 library(tidyverse)
 ```
-In der Library ISLR2 befindet sich der Datensatz und Tidyverse wird für die Darstellung des Datensatzes und Visualisierungen benötigt.
+In der Library ISLR2 befindet sich der Datensatz. 
+Tidyverse wird für die Darstellung des Datensatzes und Visualisierungen benötigt.
 
-
-## Datensatz Carseats
+## Datensatz Carseats verstehen
+In einem ersten Schritt ist es wichtig den Datensatz zu verstehen, bevor Visualisierungen und Modelle erstellt werden.
 
 ### Kopfzeile Carseats ausgeben 
 ```{r}
+# Die ersten 6 Oberservationen ausgeben
 head(Carseats)
 ```
 
 ### Endes des Datensatzes ausgeben
 ```{r}
+# Die letzten 6 Observationen ausgeben
 tail(Carseats)
 ```
+Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Beruehrung und koennen ein Bild der Attribute sowie Observationen machen.
+
+### Informationen zum Datensatz herausfinden
+```{r}
+# Informationen zum DataFrame ausgeben
+str(Carseats)
+```
+Durch str wird und die groesse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenype. 
 
 ### Zusammenfassung von Carseats
 ```{r}
+# Statistische Kennzahlen 
 summary(Carseats)
 ```
+wir geben von jeder numerischen Spalte die summarischen Statistiken aus. Im summary() werden auch die Anzahl fehlende Werte angezeigt. In unserem Fall besitzt der Datensatz keine fehlende Werte.Die Aufbereitung der Daten entfällt deshalb.
 
-Der Datensatz enthält keine fehlende Werte. Die Aufbereitung der Daten entfällt deshalb.
-
-
-### Histogramm der Verkäufe
-
+### Verteilung der Sales
 Dieses eignet sich, um ein Verständnis der Verteilung der Verkäufe zu erhalten.
 
+#### Verteilung der Sales mittels Histogramm
 ```{r}
 ggplot(data = Carseats, aes(x = Sales)) + 
-  geom_histogram() 
+  geom_histogram(fill = "lightgreen", color = "black", binwidth = 0.5) + 
+  labs(x = "Sales",
+       y = "Anzahl",
+       title = "Verteilung der Sales",
+       subtitle = "Carseats Datensatz")
 ```
+
+#### Verteilung der Sales mittels Density Plot
+```{r}
+ggplot(data = Carseats, aes(x = Sales, fill = Urban)) + 
+  geom_density(alpha = 0.5) + 
+  labs(x = "Sales",
+       y = "Anzahl",
+       title = "Verteilung der Sales",
+       subtitle = "Carseats Datensatz")
+```
+
+#### Multiplots Verteilungen
+```{r}
+ggplot(Carseats, aes(x = Sales, fill = US)) + 
+  geom_density(alpha = 0.5) + 
+```
+
+
 
 ## Hypothese 1
 

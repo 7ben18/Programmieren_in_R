@@ -1,19 +1,32 @@
 ---
 title: "prr Gruppenarbeit 2"
-output: html_notebook
+subtitle: "Studiengang Data Science (HS2022), FHNW"
+author: "Patrick Schürmann, Si Ben Tran, Gabriel Torres"
+date: "Letzte Aktualisierungen: `r format(Sys.time(), '%B %d, %Y')`"
+output:
+  bookdown::html_document2:
+      code_folding: show
+      toc: true
+      toc_depth: 3
+      toc_float: true
+      number_sections: true
+editor_options: 
+  chunk_output_type: console
 ---
+
 # Einleitung
 Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020.
 
 # Hypothese / Fragestellungen
 1) Wie sind die Korrelationen zwischen den verschiedenen Variablen?
-2) Könnte man im Winter mit Solarpanels etwa gleich viel Strom wie im Sommer produzieren?
-3) Was sind die idealen Wetterbedingungen für maximale Stromproduktion anhand Solarpanels?
+// 2) Könnte man im Winter mit Solarpanels etwa gleich viel Strom wie im Sommer produzieren?
+// 3) Was sind die idealen Wetterbedingungen für maximale Stromproduktion anhand Solarpanels?
 4) Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus?
 5) Kann man anhand des Luftdrucks eine rudimentäre Wettervorhersage erstellen?
 
 # Libraries importieren
 ```{r}
+library(plotly)
 library(corrplot)
 library(lubridate)
 library(tidyverse)
@@ -29,7 +42,6 @@ data <- data %>%
     "Windrichtung" = dkl010za, # in Grad
     "Sonnenscheindauer" = sre000z0, # in Minuten
     "Gesamtbewölkung" = nto000s0, # in octas
-    "Langwellige_Einstrahlung" = oli000z0, # in Watt pro Quadratmeter
     "Luftfeuchtigkeit" = ure200s0, # in Prozent
     "Lufttemperatur" = tre200s0, # in Grad Celsius
     "Luftdruck" = prestas0 # in Hectopascal
@@ -41,13 +53,13 @@ data$Windgeschwindigkeit <- as.numeric(data$Windgeschwindigkeit)
 data$Windrichtung <- as.numeric(data$Windrichtung)
 data$Sonnenscheindauer <- as.numeric(data$Sonnenscheindauer)
 # data$Gesamtbewölkung <- as.numeric(data$Gesamtbewölkung)
-data$Langwellige_Einstrahlung <- as.numeric(data$Langwellige_Einstrahlung)
 data$Luftfeuchtigkeit <- as.numeric(data$Luftfeuchtigkeit)
 data$Lufttemperatur <- as.numeric(data$Lufttemperatur)
 data$Luftdruck <- as.numeric(data$Luftdruck)
 ```
 
-1) Wie sind die Korrelationen zwischen den verschiedenen Variablen?
+# Beantwortung der Fragestellungen
+## Wie sind die Korrelationen zwischen den verschiedenen Variablen?
 ```{r}
 corrData <- data %>%
   select(
@@ -55,7 +67,6 @@ corrData <- data %>%
     "Windgeschwindigkeit",
     "Windrichtung",
     "Sonnenscheindauer",
-    "Langwellige_Einstrahlung",
     "Luftfeuchtigkeit",
     "Lufttemperatur",
     "Luftdruck"
@@ -63,90 +74,72 @@ corrData <- data %>%
   cor(., use = "pairwise.complete.obs")
 corrplot(corrData, method = "ellipse", order = "alphabet", type = "upper", tl.pos = "lt")
 ```
+
 Die stärksten Korrelationen sind Windgeschwindigkeit ~ Böenspitze, LangwelligeEinstrahlung ~ Luftfeuchtigkeit und Luftdruck ~ Lufttemperatur.  
 
-2) Könnte man im Winter mit Solarpanels etwa gleich viel Strom wie im Sommer produzieren?
+## Frage 2
 ```{r}
-plot1 <- data %>%
-  group_by(time = as.Date(time)) %>%
-  summarize(
-    mean_Langwellige_Einstrahlung = mean(Langwellige_Einstrahlung)
-  ) %>%
-  drop_na()
 
-ggplot(plot1, aes(x = time, y = mean_Langwellige_Einstrahlung)) +
-  geom_smooth(se = FALSE, span = 0.2) +
-  geom_line() +
-  expand_limits(y = 0) +
-  labs(
-    title = "Verteilung der Langwelligen Einstrahlung über das Jahr 2020",
-    subtitle = "Anhand wöchentlicher Durchschnittswerte",
-    x = "Kalenderwoche",
-    y = "Langwellige Einstrahlung in W/m^2"
+```
+
+
+## Frage 3
+```{r}
+
+```
+
+## Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus?
+```{r}
+granularity <- "day"
+
+plot <- data %>%
+  group_by(time = floor_date(time, granularity)) %>%
+  summarise(
+    mean_Lufttemperatur = mean(Lufttemperatur),
+    mean_Luftfeuchtigkeit = mean(Luftfeuchtigkeit),
+    mean_Windgeschwindigkeit = mean(Windgeschwindigkeit),
+    Sonnenscheindauer_h = sum(Sonnenscheindauer) / 60
+    )
+
+plot_ly(
+  data = plot,
+  type = "scatter",
+  mode = "lines",
+  width = 900,
+  height = 700
+) %>%
+  add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C") %>%
+  add_trace(x = ~time, y = ~mean_Luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~Sonnenscheindauer_h, name = "Sonnenscheindauer in h", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~mean_Windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
+  layout(
+    showlegend = TRUE,
+    title = "Wetterverlauf im Jungfraujoch über das Jahr 2020",
+    xaxis = list(
+      title = "Zeitachse",
+      rangeslider = list(visible = T),
+      rangeselector = list(
+        buttons = list(
+          list(count = 1, label = "1m", step = "month"),
+          list(count = 1, label = "all", step = "year")
+        )
+      ),
+      zerolinecolor = "#ffff",
+      zerolinewidth = 2,
+      gridcolor = "ffff"
+    ),
+    yaxis = list(
+      title = "",
+      zerolinecolor = "#ffff",
+      zerolinewidth = 2,
+      gridcolor = "ffff"
+    ),
+    plot_bgcolor = "#e5ecf6",
+    margin = 0.2
   )
 ```
-Im Sommer wird die Wetterstation am meisten mit Langwelliger Einstrahlung bestrahlt. Im Winter wird die Wetterstation aber auch recht gut bestrahlt. Deswegen wäre es von klarem Vorteil, die Solarpanels auch im Winter im Betrieb zu halten. Leider können wir den Einfluss von Schnee auf den Solarpanels nicht messen.
 
-
-3) Was sind die idealen Wetterbedingungen für maximale Stromproduktion anhand Solarpanels?
-```{r}
-data %>%
-  select(
-    "Böenspitze",
-    "Windgeschwindigkeit",
-    "Windrichtung",
-    "Sonnenscheindauer",
-    "Langwellige_Einstrahlung",
-    "Luftfeuchtigkeit",
-    "Lufttemperatur",
-    "Luftdruck"
-  ) %>%
-  cor(., y = data$Langwellige_Einstrahlung, use = "pairwise.complete.obs")
-```
-Die grössten Korrelationen zur Langwelligen Einstrahlung sind die Luftfeuchtigkeit, die Sonnenscheindauer, und die Lufttemperatur.
-
-```{r}
-plot2 <- data %>%
-  select(
-    "time",
-    "Luftfeuchtigkeit",
-    "Sonnenscheindauer",
-    "Lufttemperatur",
-    "Langwellige_Einstrahlung"
-  ) %>% 
-  filter(as.Date(time) == "2020-07-01")
-
-# Hier anstatt 4 Plots, 1 interaktiven Plot mit auswählbarer Zeitspanne
-ggplot(plot2, aes(x = time)) +
-  geom_smooth(aes(y = Langwellige_Einstrahlung), span = 0.1) 
-
-ggplot(plot2, aes(x = time)) +
-  geom_smooth(aes(y = Luftfeuchtigkeit), span = 0.1) 
-
-ggplot(plot2, aes(x = time)) +
-  geom_smooth(aes(y = Sonnenscheindauer), span = 0.1) 
-
-ggplot(plot2, aes(x = time)) +
-  geom_smooth(aes(y = Lufttemperatur), span = 0.1) 
-```
-Bro wtf??
-
-4) Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus?
-```{r} 
-# Hier riesen Potential für interaktive Vis
-plot3 <- data %>%
-  group_by(time = as.Date(time)) %>%
-  summarize(
-    mean_Lufttemperatur = mean(Lufttemperatur)
-  ) %>%
-  drop_na()
-
-ggplot(plot3, aes(time, mean_Lufttemperatur)) +
-  geom_smooth(span = 0.1)
-```
-
-5) Kann man anhand des Luftdrucks eine rudimentäre Wettervorhersage erstellen?
+## Kann man anhand des Luftdrucks eine rudimentäre Wettervorhersage erstellen?
 ```{r}
 
 ```
-

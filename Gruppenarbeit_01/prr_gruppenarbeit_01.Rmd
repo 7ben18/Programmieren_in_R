@@ -7,7 +7,6 @@ output:
     toc_float: true
 ---
 
-
 # Lineare und logistische Regressionen in R
 
 Für die erste Abgabe im Modul PRR beschäftigen wir uns mit (multiplen) linearen und logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an. Datensatz von ISRL2.
@@ -234,7 +233,8 @@ plot(lm.fit3, which=1)
 ```
 
 ```{r}
-hist(lm.fit3$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
+hist(lm.fit3$residuals) 
+# Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```
 ### Interpretation
 
@@ -242,6 +242,7 @@ Interperation: Sales ist nicht abhaengig von Advertising. Erkennbar im Tukeyansc
 
 
 ## Hypothese 2
+Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
 
 Hinzufügen einer Spalte mit der Differenz zwischen unserem Preis und der der Konkurrenz.
 ```{r}
@@ -249,6 +250,36 @@ Carseats <- Carseats %>% mutate(DiffPrice = Price - CompPrice)
 str(Carseats)
 ```
 
+### Streudiagramm erstellen von Diffprice vs. Sales
+```{r}
+plot(Sales ~ DiffPrice, data = Carseats)
+```
+### Linear Regressionsmodell erstellen
+```{r}
+lm.fit4 <- lm(Sales ~ DiffPrice, data = Carseats)
+```
+
+### Summarische Auswertung von lm.fit4
+```{r}
+summary(lm.fit4)
+```
+
+### Streudiagramm mit Linearem Modell
+```{r}
+plot(Sales ~ DiffPrice, data = Carseats)
+abline(lm.fit4, col = "red")
+```
+
+### Residuenanalyse
+```{r}
+par(mfrow = c(2, 2))
+plot(lm.fit4) 
+```
+
+### Histogramm der Residuen
+```{r}
+hist(lm.fit4$residuals) 
+```
 
 # Multiple lineare Regressionsmodell
 

@@ -24,7 +24,7 @@ Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statisti
 - Urban: Klassifikation, ob sich der Standort in einer städtischen oder ländlichen Region befindet
 
 
-## Hypothesen
+# Auflistung der Hypothesen
 
 Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
 
@@ -33,6 +33,8 @@ Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
 3) Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
 4) Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
 
+# Vorbereitung
+In diesem Kapitel installieren wir die notwendigen Libraries und verschaffen uns einen Überlick über den Carseats Datensatz.
 
 ## Installationen
 
@@ -44,7 +46,7 @@ library(tidyverse)
 In der Library ISLR2 befindet sich der Datensatz. 
 Tidyverse wird für die Darstellung des Datensatzes und Visualisierungen benötigt.
 
-## Datensatz Carseats verstehen
+## Überblick Datensatz Carseats
 In einem ersten Schritt ist es wichtig den Datensatz zu verstehen, bevor Visualisierungen und Modelle erstellt werden.
 
 ### Daten einlesen
@@ -59,7 +61,7 @@ data(Carseats)
 head(Carseats)
 ```
 
-### Endes des Datensatzes ausgeben
+### Fusszeile des Datensatzes ausgeben
 ```{r}
 # Die letzten 6 Observationen ausgeben
 tail(Carseats)
@@ -73,17 +75,16 @@ str(Carseats)
 ```
 Durch str wird und die groesse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenype. 
 
-### Zusammenfassung von Carseats
+### Summarische Zusammenfassung von Carseats
 ```{r}
 # Statistische Kennzahlen 
 summary(Carseats)
 ```
 wir geben von jeder numerischen Spalte die summarischen Statistiken aus. Im summary() werden auch die Anzahl fehlende Werte angezeigt. In unserem Fall besitzt der Datensatz keine fehlende Werte.Die Aufbereitung der Daten entfällt deshalb.
 
-### Verteilung der Sales
-Dieses eignet sich, um ein Verständnis der Verteilung der Verkäufe zu erhalten.
+### Visualisierung der Daten
 
-#### Verteilung der Sales mittels Histogramm
+#### Verteilung der Sales
 ```{r}
 ggplot(data = Carseats, aes(x = Sales)) + 
   geom_histogram(fill = "lightgreen", color = "black", binwidth = 0.5) + 
@@ -93,7 +94,7 @@ ggplot(data = Carseats, aes(x = Sales)) +
        subtitle = "Carseats Datensatz")
 ```
 
-#### Verteilung der Sales mittels Density Plot
+#### Verteilung der Sales anhand der Variable Urban
 ```{r}
 ggplot(data = Carseats, aes(x = Sales, fill = Urban)) + 
   geom_density(alpha = 0.5) + 
@@ -110,9 +111,13 @@ ggplot(Carseats, aes(x = Sales, fill = US)) +
   facet_grid(Urban  ~ ShelveLoc)
 ```
 
-## Hypothese 1
+# Hypothese 1: Einfach lineare Regression
 
-### Visualisierung
+Ist Sales abhaengig von Income/Advertising/Population der Region?
+
+## Sales vs. Income
+
+### Visualisierung von Sales und Income
 
 Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
 
@@ -139,7 +144,7 @@ Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Ei
 
 Diese Untersuchung führen wir später durch. Vorab stellen wir weitere Methoden der linearen Regression vor.
 
-### Modell Methoden
+### Übersicht der Modell Methoden
 
 Das Modell enthält weitere Berechnungen und Kennzahlen. Names() zeigt eine Übersicht dieser.
 
@@ -154,7 +159,7 @@ Die oben ersichtlichen Koeffizienten lassen sich direkt via $coefficients abrufe
 ```{r}
 lm.fit1$coefficients
 ```
-### Konfidenzintervall fuer Koeffizienten angeben
+### Konfidenzintervall für Koeffizienten angeben
 
 Wertvoll ist die Berechnung der Konfidenzintervalle, die im Summary nicht angezeigt wird. Diese gibt an, in welchem Bereich sich die Koeffizienten mit einer Wahrscheinlichkeit von 5% befinden.
 
@@ -163,7 +168,7 @@ confint(lm.fit1)
 ```
 
 
-## Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
+### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 
 Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot wird die Steigung ersichtlich, man sieht aber auch die starke Streuung.
 
@@ -172,7 +177,7 @@ plot(Sales ~ Income, data = Carseats)
 abline(lm.fit1, col = "red")
 ```
 
-### Residuenanalyse (Visualisierung ausbessern)
+### Residuenanalyse
 Nun, da wir unser Modell haben, können wir feststellen, ob es ein gutes Modell ist, indem wir bei den Residuen folgende 3 Bedingungen überprüfen:
 
 Der Fehler sollte nicht abhängig sein
@@ -192,16 +197,26 @@ plot(lm.fit1)
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen. Im folgenden Plot ist ersichtlich, dass die Verteilung einigermassen normalverteilt ist.
 
+
+Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```{r}
-hist(lm.fit1$residuals) # Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
+hist(lm.fit1$residuals) 
 ```
 
-Wir werden nun das Modell für die Variablen Population und Advertising durchführen. Danach folgt eine Interpretation der Resultate und Erkenntnisse.
+### Interpretation
+viel blabla blaaaaa
 
+## Sales vs. Population
 
-### Sales vs. Population
+### Visualisierung von Sales und Population
 
-Da für die weiteren beiden Modelle die gleichen Untersuchungen durchgeführt werden, kommentieren wir diese nicht mehr ausführlich.
+Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
+
+```{r}
+plot(Sales ~ Population, data = Carseats)
+```
+
+### Model erstellen und Auswertung
 
 ```{r}
 lm.fit2 <- lm(Sales ~ Population, data = Carseats)
@@ -210,39 +225,76 @@ summary(lm.fit2)
 
 Die Einfluss der Population ist nicht signifikant. Der folgende Plot bestätigt, dass die Steigung 0 beträgt. Wir werden diese Variable deshalb nicht weiter untersuchen.
 
+### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
 plot(Sales ~ Population, data = Carseats)
 abline(lm.fit2, col = "red")
 ```
 
+### Residuenanalyse
+```{r}
+par(mfrow = c(2, 2))
+plot(lm.fit2) 
+```
+
+```{r}
+hist(lm.fit2$residuals) 
+```
+### Interpretation
+viel blabla blaaaaa
+
+
 ## Sales vs. Advertising
+
+### Visualisierung von Sales und Population
+
+Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
+
+```{r}
+plot(Sales ~ Advertising, data = Carseats)
+```
+
+### Modell erstellen und Auswertung
+
 ```{r}
 lm.fit3 <- lm(Sales ~ Advertising, data = Carseats)
 summary(lm.fit3)
 ```
 
+### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 
 ```{r}
 plot(Sales ~ Advertising, data = Carseats)
 abline(lm.fit3, col = "red")
 ```
 
-
+### Residuenanalyse
 ```{r}
-plot(lm.fit3, which=1)
+par(mfrow = c(2, 2))
+plot(lm.fit3) 
 ```
 
 ```{r}
 hist(lm.fit3$residuals) 
-# Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```
 ### Interpretation
+viel blabla blaaaaa
+
+
+## Interpretation von Hypothese 1
 
 Interperation: Sales ist nicht abhaengig von Advertising. Erkennbar im Tukeyanscombe Plot, Histogramm ist irreführend.
 
+Idee: Kaum Zusammenänge, deshalb überprüfen wir bei Hypothese 2, ob eine Berechnung von Daten aussagekräftiger ist.
 
-## Hypothese 2
+
+# Hypothese 2: Einfach lineare Regression mit berechneten Daten
+
 Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
+
+## Sales vs. Preisdifferenz zu Konkurrenz
+
+### Berechnung der Spalte DiffPrice
 
 Hinzufügen einer Spalte mit der Differenz zwischen unserem Preis und der der Konkurrenz.
 ```{r}
@@ -250,21 +302,19 @@ Carseats <- Carseats %>% mutate(DiffPrice = Price - CompPrice)
 str(Carseats)
 ```
 
-### Streudiagramm erstellen von Diffprice vs. Sales
+
+### Visualisierung von Sales und DiffPrice
+
 ```{r}
 plot(Sales ~ DiffPrice, data = Carseats)
 ```
-### Linear Regressionsmodell erstellen
+### Model erstellen und Auswertung
 ```{r}
 lm.fit4 <- lm(Sales ~ DiffPrice, data = Carseats)
-```
-
-### Summarische Auswertung von lm.fit4
-```{r}
 summary(lm.fit4)
 ```
 
-### Streudiagramm mit Linearem Modell
+### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
 plot(Sales ~ DiffPrice, data = Carseats)
 abline(lm.fit4, col = "red")
@@ -276,26 +326,38 @@ par(mfrow = c(2, 2))
 plot(lm.fit4) 
 ```
 
-### Histogramm der Residuen
+
 ```{r}
 hist(lm.fit4$residuals) 
 ```
+## Interpretation der Hypothese 2
+auch blabla blaaaa
 
-# Multiple lineare Regressionsmodell
 
-## Hypothese 3
+# Hypothese 3: Multiple lineare Regression
+
+## Sales vs. mehrere Features
 
 Ist Sales durch mehrere Features abhaengig?
+
+### Modelle erstellen und Auswertungen
+In diesem Kapitel erstellen wir mehrere Modelle und wählen eines aufgrund einer ersten Auswertung für die weitere Untersuchung aus.
+
+#### Sales vs. Income und Population
 
 ```{r}
 mlr.fit1 <- lm(Sales ~ Income + Population, data = Carseats)
 summary(mlr.fit1)
 ```
 
+#### Sales vs. Income und Population und deren Multiplikation (Interaktion)
+
 ```{r}
 mlr.fit2 <- lm(Sales ~ Income * Population, data = Carseats)
 summary(mlr.fit2)
 ```
+
+#### Sales vs. alle Variabeln
 
 ```{r}
 mlr.fit3 <- lm(Sales ~ ., data = Carseats)
@@ -304,13 +366,15 @@ summary(mlr.fit3)
 Kommentar: Population hat definitv keinen Einfluss auf Sales, wir überprüfen deshalb andere Variablen.
 DiffPrice haben wir als Differenz von CompPrice und Price berechnet. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Deshalb weist es ein NA aus. 
 
+#### Sales vs. aussagekräftigste Variabeln und DiffPrice
+
 ```{r}
 mlr.fit4 <- lm(Sales ~ Income + Advertising + ShelveLoc + Age + DiffPrice, data = Carseats)
 summary(mlr.fit4)
 ```
 Durch die Auswahl der aussagekräftigsten Variabeln konnten wir ein Modell erstellen, dass Sales zuverlässig erklärt. Die verwendeten Variabeln haben wir aus dem Modell, das alle Features verwendet, entnommen. Diese haben dort den tiefsten P-Wert.
 
-### Analyse der Residuen
+### Residuenanalyse
 
 ```{r}
 par(mfrow = c(2,2))
@@ -320,21 +384,23 @@ plot(mlr.fit4)
 ```{r}
 hist(mlr.fit4$residuals, main = "Histogramm der Residuen", xlab = "Residuen")
 ```
+## Interpreation von Hypothese 3
+blaaaaasss
 
 
-#Logistische Regression
-
-## Hypothese 4
+# Hypothese 4: Logistische Regression
 Werden in urbanen Regionen mehr Kindersitze gekauft?
 
-### Klassifizierung
+## Sales vs. Urban
+
+### Klassifizierung erstellen
 
 ```{r}
 Carseats <- Carseats %>% 
   mutate(Urban_binaer = recode(Urban, "No" = 0, "Yes" = 1))
 ```
 
-### Visualisierung mittels Streudiagramm
+### Visualisierung von Sales und Urban
 ```{r}
 # Plot Predicted data and original data points
 ggplot(Carseats, aes(x=Sales, y=Urban)) + 
@@ -344,7 +410,7 @@ ggplot(Carseats, aes(x=Sales, y=Urban)) +
 Eine Logistische Regression von Urban (Yes, No) ist mittels Sales nicht sinnvoll, da die Streupunkte
 uebereinander liegen.
 
-### Logistisches Modell erstellen
+### Model erstellen und Auswertung
 ```{r}
 logreg.fit1 <- glm(Urban_binaer ~ Sales, data = Carseats , family = binomial)
 summary(logreg.fit1)
@@ -352,7 +418,10 @@ summary(logreg.fit1)
 Wie Aufgrund der Visualisierung gesehen, ergibt ein logistishes Regressionsmodell einen
 grossen P>|z| Wert. Somit gibt es keinen logistischen Zusammenhang zwischen Sales und Urban. 
 
-### Scatterplot von Urban vs Population
+## Sales vs. ShelveLoc
+
+### Visualisierung von Sales und ShelveLoc
+Zuerst für alles ShelveLoc, danach haben die Location "Medium" entfernt.
 ```{r}
 Carseats %>% 
   ggplot(aes(x = Sales, y = ShelveLoc)) +
@@ -366,20 +435,20 @@ Carseats_ex_medium %>%
   geom_point()
 ```
 
-### Klassifizierung
+### Klassifizierung erstellen
 ```{r}
 Carseats_ex_medium <- Carseats_ex_medium %>% 
   mutate(ShelveLoc_binaer = recode(ShelveLoc, "Bad" = 0, "Good" = 1))
 head(Carseats_ex_medium)
 ```
 
-### Logistisches Modell fuer ShelveLoc erstellen
+### Model erstellen und Auswertung
 ```{r}
 logreg.fit2 <- glm(ShelveLoc_binaer ~ Sales, data = Carseats_ex_medium , family = binomial)
 summary(logreg.fit2)
 ```
 
-### Logistische Regression im Streudiagramm visualisieren
+### Visualisierung der Daten mit dem Regressions Modell
 ```{r}
 ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) + 
   geom_point() +
@@ -389,7 +458,7 @@ ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) +
 
 
 # Berechnung der Decision Boundary
--logreg.fit2$coefficients[1] / logreg.fit2$coefficients[2]
+#-logreg.fit2$coefficients[1] / logreg.fit2$coefficients[2]
 ```
 Alle Sales die groesser als 7.9633 sind, werden bei der Logistischen Regression als Gut definiert. 
 
@@ -397,7 +466,7 @@ Alle Sales die groesser als 7.9633 sind, werden bei der Logistischen Regression 
 Wir erstellen ein neues logistisches Model und verwenden dafuer einen Trainingsdatensatz
 
 
-### Confusion Matrix erstellen
+#### Confusion Matrix erstellen
 ```{r}
 # zuerst erstellen wir eine preidiction, mit den Testdaten
 
@@ -419,8 +488,8 @@ Spalten = Carseats_ex_medium$Shelvelo_binear => Tatsaechlichen Werte
 Zeilen => Vorhergesagte Werte
 
 
-### Confusion Matrix Performenz Kennzahlen
-#### Accuracy
+#### Confusion Matrix Performenz Kennzahlen
+##### Accuracy
 ```{r}
 # Accuracy Berechnen
 acc <- (82 + 66) / (82 + 19 + 14 + 66)
@@ -428,7 +497,7 @@ acc
 
 ```
 
-#### Precision
+##### Precision
 Precision = True Positiv / (True Positiv + False Positiv)
 Preicision ist, Anteil richtig positiv an allen Positiv
 ```{r}
@@ -436,7 +505,7 @@ Preicision ist, Anteil richtig positiv an allen Positiv
 precision <- 66 / (66 + 14)
 precision
 ```
-#### Reall
+##### Reall
 Recall = True Positiv / (True Positiv + False Negativ)
 Recall ist, Anteil richtig positiv an allen richtigen Vorhersagen
 ```{r}

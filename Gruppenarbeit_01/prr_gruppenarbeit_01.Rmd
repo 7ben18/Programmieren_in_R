@@ -363,17 +363,53 @@ ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) +
 Alle Sales die groesser als 7.9633 sind, werden bei der Logistischen Regression als Gut definiert. 
 
 ### Evaluierung vom logistischen Model mittels confusions Matrix
+Wir erstellen ein neues logistisches Model und verwenden dafuer einen Trainingsdatensatz
+
+
+### Confusion Matrix erstellen
 ```{r}
+# zuerst erstellen wir eine preidiction, mit den Testdaten
+
+# Predicte ShelveLoc_binaer Werte 
+logreg.fit2.probs <- predict(logreg.fit2, type = "response")
+
+# Erstellt einen Vektor mit 181  Null Werten 
+logreg.fit2.pred <- rep(0, 181)
+
+# Uebreschreibt alle Werte die groesser sind als 0.5 als 1
+logreg.fit2.pred[logreg.fit2.probs > .5] = 1
+
+# Erstellen eine Kreuztabelle (Confusions Matrix) 
+
+table(logreg.fit2.pred, Carseats_ex_medium$ShelveLoc_binaer)
+
+```
+Spalten = Carseats_ex_medium$Shelvelo_binear => Tatsaechlichen Werte
+Zeilen => Vorhergesagte Werte
 
 
+### Confusion Matrix Performenz Kennzahlen
+#### Accuracy
+```{r}
+# Accuracy Berechnen
+acc <- (82 + 66) / (82 + 19 + 14 + 66)
+acc
 
 ```
 
-
-
-
-
-
-
-
-
+#### Precision
+Precision = True Positiv / (True Positiv + False Positiv)
+Preicision ist, Anteil richtig positiv an allen Positiv
+```{r}
+# Precision Berechnen 
+precision <- 66 / (66 + 14)
+precision
+```
+#### Reall
+Recall = True Positiv / (True Positiv + False Negativ)
+Recall ist, Anteil richtig positiv an allen richtigen Vorhersagen
+```{r}
+# Recall berechnen
+recall <- 66 / (66 + 19)
+recall
+```

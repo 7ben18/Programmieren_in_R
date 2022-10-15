@@ -73,21 +73,25 @@ Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Be
 # Informationen zum DataFrame ausgeben
 str(Carseats)
 ```
-Durch str wird und die groesse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenype. 
+Durch str wird und die grösse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp. Weiter erkennen wir auch einige Werte die in der Spalte vorkommen. 
 
 ### Summarische Zusammenfassung von Carseats
 ```{r}
 # Statistische Kennzahlen 
 summary(Carseats)
 ```
-wir geben von jeder numerischen Spalte die summarischen Statistiken aus. Im summary() werden auch die Anzahl fehlende Werte angezeigt. In unserem Fall besitzt der Datensatz keine fehlende Werte.Die Aufbereitung der Daten entfällt deshalb.
+wir geben von jeder numerischen Spalte die summarischen Statistiken aus. 
+Darin enthalten sind: Minimum, 1. Quantil, Median, Mittelwert, 3. Quantil, Maximum.
+Im summary() werden auch die Anzahl fehlende Werte angezeigt. 
+In unserem Fall besitzt der Datensatz keine fehlende Werte.
+Die Aufbereitung der Daten entfällt deshalb.
 
 ### Visualisierung der Daten
 
 #### Verteilung der Sales
 ```{r}
 ggplot(data = Carseats, aes(x = Sales)) + 
-  geom_histogram(fill = "lightgreen", color = "black", binwidth = 0.5) + 
+  geom_density(fill = "lightgreen", color = "black", alpha = 0.3) + 
   labs(x = "Sales",
        y = "Anzahl",
        title = "Verteilung der Sales",
@@ -97,32 +101,107 @@ ggplot(data = Carseats, aes(x = Sales)) +
 #### Verteilung der Sales anhand der Variable Urban
 ```{r}
 ggplot(data = Carseats, aes(x = Sales, fill = Urban)) + 
-  geom_density(alpha = 0.5) + 
+  geom_density(alpha = 0.3) + 
   labs(x = "Sales",
        y = "Anzahl",
        title = "Verteilung der Sales",
        subtitle = "Carseats Datensatz")
 ```
 
-#### Multiplots Verteilungen
+#### Multiplots Verteilungen von Sales
 ```{r}
 ggplot(Carseats, aes(x = Sales, fill = US)) + 
-  geom_density(alpha = 0.5) +
-  facet_grid(Urban  ~ ShelveLoc)
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Sales",
+       y = "Anzahl",
+       title = "Verteilung der Sales unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von CompPrice
+```{r}
+ggplot(Carseats, aes(x = CompPrice, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "CompPrice",
+       y = "Anzahl",
+       title = "Verteilung von CompPrice unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von Income
+```{r}
+ggplot(Carseats, aes(x = Income, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Income",
+       y = "Anzahl",
+       title = "Verteilung von Income unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von Population
+```{r}
+ggplot(Carseats, aes(x = Population, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Population",
+       y = "Anzahl",
+       title = "Verteilung von Population unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von Price
+```{r}
+ggplot(Carseats, aes(x = Price, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Price",
+       y = "Anzahl",
+       title = "Verteilung von Price unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von Age
+```{r}
+ggplot(Carseats, aes(x = Age, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Age",
+       y = "Anzahl",
+       title = "Verteilung von Age unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
+```
+
+#### Multiplots Verteilungen von Education
+```{r}
+ggplot(Carseats, aes(x = Education, fill = US)) + 
+  geom_density(alpha = 0.3) +
+  facet_grid(Urban  ~ ShelveLoc, labeller = label_both) +
+  labs(x = "Education",
+       y = "Anzahl",
+       title = "Verteilung von Education unterteilt nach ShelveLoc und Urban",
+       subtitle = "Carseats Datensatz")
+
 ```
 
 # Hypothese 1: Einfach lineare Regression
-
 Ist Sales abhaengig von Income/Advertising/Population der Region?
 
 ## Sales vs. Income
-
 ### Visualisierung von Sales und Income
-
-Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
+Bevor das Model erstellt wird, visualisieren wir die beiden Variablen.
 
 ```{r}
-plot(Sales ~ Income, data = Carseats)
+plot(Sales ~ Income, data = Carseats, 
+     main = "Sales vs Income", pch=21, bg = "lightblue")
 ```
 
 ### Modell erstellen
@@ -173,7 +252,10 @@ confint(lm.fit1)
 Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot wird die Steigung ersichtlich, man sieht aber auch die starke Streuung.
 
 ```{r}
-plot(Sales ~ Income, data = Carseats)
+# Streudiagramm erstellen
+plot(Sales ~ Income, data = Carseats, 
+     main = "Sales vs Income", pch=21, bg = "lightblue")
+# Lineares Modell hinzufügen 
 abline(lm.fit1, col = "red")
 ```
 
@@ -200,7 +282,8 @@ Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen. Im f
 
 Ueberpreufen vom Erwartungswert =  0 + Normalverteilt
 ```{r}
-hist(lm.fit1$residuals) 
+hist(lm.fit1$residuals, 
+     main = "Verteilung der Residuen", col = "lightblue") 
 ```
 
 ### Interpretation
@@ -213,7 +296,8 @@ viel blabla blaaaaa
 Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
 
 ```{r}
-plot(Sales ~ Population, data = Carseats)
+plot(Sales ~ Population, data = Carseats, 
+     main = "Sales vs Population", pch=21, bg = "lightblue")
 ```
 
 ### Model erstellen und Auswertung
@@ -227,7 +311,8 @@ Die Einfluss der Population ist nicht signifikant. Der folgende Plot bestätigt,
 
 ### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
-plot(Sales ~ Population, data = Carseats)
+plot(Sales ~ Population, data = Carseats, 
+     main = "Sales vs Population", pch=21, bg = "lightblue")
 abline(lm.fit2, col = "red")
 ```
 
@@ -238,7 +323,8 @@ plot(lm.fit2)
 ```
 
 ```{r}
-hist(lm.fit2$residuals) 
+hist(lm.fit2$residuals, 
+     main = "Verteilung der Residuen", col = "lightblue") 
 ```
 ### Interpretation
 viel blabla blaaaaa
@@ -251,7 +337,8 @@ viel blabla blaaaaa
 Bevor das Modell erstellt wird, visualisieren wir die beiden Variablen.
 
 ```{r}
-plot(Sales ~ Advertising, data = Carseats)
+plot(Sales ~ Advertising, data = Carseats, 
+     main = "Sales vs Advertising", pch=21, bg = "lightblue")
 ```
 
 ### Modell erstellen und Auswertung
@@ -264,7 +351,8 @@ summary(lm.fit3)
 ### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 
 ```{r}
-plot(Sales ~ Advertising, data = Carseats)
+plot(Sales ~ Advertising, data = Carseats, 
+     main = "Sales vs Advertising", pch=21, bg = "lightblue")
 abline(lm.fit3, col = "red")
 ```
 
@@ -275,7 +363,8 @@ plot(lm.fit3)
 ```
 
 ```{r}
-hist(lm.fit3$residuals) 
+hist(lm.fit3$residuals, 
+     main = "Verteilung der Residuen", col = "lightblue")
 ```
 ### Interpretation
 viel blabla blaaaaa
@@ -306,7 +395,8 @@ str(Carseats)
 ### Visualisierung von Sales und DiffPrice
 
 ```{r}
-plot(Sales ~ DiffPrice, data = Carseats)
+plot(Sales ~ DiffPrice, data = Carseats, 
+     main = "Sales vs DiffPrice", pch=21, bg = "lightblue")
 ```
 ### Model erstellen und Auswertung
 ```{r}
@@ -316,7 +406,8 @@ summary(lm.fit4)
 
 ### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
-plot(Sales ~ DiffPrice, data = Carseats)
+plot(Sales ~ DiffPrice, data = Carseats, 
+     main = "Sales vs DiffPrice", pch=21, bg = "lightblue")
 abline(lm.fit4, col = "red")
 ```
 
@@ -328,7 +419,8 @@ plot(lm.fit4)
 
 
 ```{r}
-hist(lm.fit4$residuals) 
+hist(lm.fit4$residuals, 
+     main = "Verteilung der Residuen", col = "lightblue")
 ```
 ## Interpretation der Hypothese 2
 auch blabla blaaaa
@@ -382,7 +474,8 @@ plot(mlr.fit4)
 ```
 
 ```{r}
-hist(mlr.fit4$residuals, main = "Histogramm der Residuen", xlab = "Residuen")
+hist(mlr.fit4$residuals, 
+     main = "Verteilung der Residuen", col = "lightblue")
 ```
 ## Interpreation von Hypothese 3
 blaaaaasss
@@ -404,8 +497,11 @@ Carseats <- Carseats %>%
 ```{r}
 # Plot Predicted data and original data points
 ggplot(Carseats, aes(x=Sales, y=Urban)) + 
-  geom_point() +
-  labs(title = "Streudiagramm")
+  geom_point(color = "blue") +
+  labs(x = "Sales",
+       y = "Urban",
+       title = "Sales vs Urban",
+       subtitle = "Carseats Datensatz")
 ```
 Eine Logistische Regression von Urban (Yes, No) ist mittels Sales nicht sinnvoll, da die Streupunkte
 uebereinander liegen.
@@ -425,14 +521,22 @@ Zuerst für alles ShelveLoc, danach haben die Location "Medium" entfernt.
 ```{r}
 Carseats %>% 
   ggplot(aes(x = Sales, y = ShelveLoc)) +
-  geom_point()
+  geom_point(color = "blue") +
+  labs(x = "Sales",
+       y = "Urban",
+       title = "Sales vs Urban",
+       subtitle = "Carseats Datensatz")
 
 # Remove Medium in ShelveLoc
 Carseats_ex_medium <- Carseats %>% filter(ShelveLoc != "Medium")
 
 Carseats_ex_medium %>% 
   ggplot(aes(x = Sales, y = ShelveLoc)) + 
-  geom_point()
+  geom_point(color = "blue") +
+  labs(x = "Sales",
+       y = "Urban",
+       title = "Sales vs Urban",
+       subtitle = "Carseats Datensatz")
 ```
 
 ### Klassifizierung erstellen
@@ -451,14 +555,18 @@ summary(logreg.fit2)
 ### Visualisierung der Daten mit dem Regressions Modell
 ```{r}
 ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) + 
-  geom_point() +
-  stat_smooth(method="glm", formula = y ~ x, color="green", 
+  geom_point(color = "blue") +
+  labs(x = "Sales",
+       y = "Urban",
+       title = "Sales vs Urban",
+       subtitle = "Carseats Datensatz") +
+  stat_smooth(method="glm", formula = y ~ x, color="red", 
               se = FALSE, method.args = list(family=binomial)) + 
   geom_vline(xintercept = 7.9633)
 
-
 # Berechnung der Decision Boundary
 #-logreg.fit2$coefficients[1] / logreg.fit2$coefficients[2]
+
 ```
 Alle Sales die groesser als 7.9633 sind, werden bei der Logistischen Regression als Gut definiert. 
 

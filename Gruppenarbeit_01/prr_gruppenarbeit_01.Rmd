@@ -597,9 +597,6 @@ ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) +
 ### Evaluierung vom logistischen Model mittels Confusions Matrix
 Um die Genauigkeit des Modelles zu berechnen, erstellen wir eine Confusion Matrix.
 
-??erstellen ein neues logistisches Model und verwenden dafür einen Trainingsdatensatz
-
-
 #### Confusion Matrix erstellen
 ```{r}
 # zuerst erstellen wir eine Prediction, mit den Testdaten

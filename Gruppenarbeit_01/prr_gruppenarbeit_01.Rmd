@@ -29,10 +29,10 @@ Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statisti
 
 # Auflistung der Hypothesen
 Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
-1) Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
-2) Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
-3) Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
-4) Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
+1. Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
+2. Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
+3. Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
+4. Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
 
 # Vorbereitung
 In diesem Kapitel installieren wir die notwendigen Libraries und verschaffen uns einen Überlick über den Carseats Datensatz.

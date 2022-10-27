@@ -9,10 +9,11 @@ output:
 
 # Lineare und logistische Regressionen in R
 
-Für die erste Abgabe im Modul PRR beschäftigen wir uns mit (multiplen) linearen und logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an. Datensatz von ISRL2.
+Für die erste Abgabe im Modul PRR beschäftigen wir uns mit (multiplen) linearen und
+logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an. Datensatz von ISRL2.
 Wir haben uns für diese Methoden entschieden, weil sie ein zentraler Bestandteil von Data Science sind. Sie wird verwendet, um Zusammenhängen in Datensätze zu verstehen und um Prognosen erstellen zu können. Diese Regressionen sind im R Grundpakte enthalten. Es muss also keine separate Library installiert und geladen werden.
 
-Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statistical Learning" verwendet wird. Dieses Buch erarbeiten wir in diesem Studiengang im Modul "Statistisches Lernen". Dort wird er zwar hauptsächlich angewendet um Decision Trees zu erstellen. Dank 11 Variablen und 400 Observationen eignet er sich aber auch gut für Regressionen. Für eine genau Erklärung der Variablen verweisen wir auf die Homepage https://rdrr.io/cran/ISLR2/man/Carseats.html. Für die unten stehenden Hypothesen werden wir mit folgenden Variablen arbeiten:
+Carseats ist ein **generischer** Datensatz, der im Buch "An Introduction to Statistical Learning" verwendet wird. Dieses Buch erarbeiten wir in diesem Studiengang im Modul "Statistisches Lernen". Dort wird er zwar hauptsächlich angewendet um Decision Trees zu erstellen. Dank 11 Variablen und 400 Observationen eignet er sich aber auch gut für Regressionen. Jede Zeile im Datensatz entspricht einem Verkaufslokal, gejoint mit Durchschnittsstatitistiken für das Einzugsgebiet des Lokals. Für eine genau Erklärung der Variablen verweisen wir auf die Homepage https://rdrr.io/cran/ISLR2/man/Carseats.html. Für die unten stehenden Hypothesen werden wir mit folgenden Variablen arbeiten:
 
 - Sales: Verkaufte Anzahl Kindersitze pro Standort in 1'000 Stück
 - CompPrice: Verkaufte Anzahl Kindersitze von Konkurrenten in 1'000 Stück
@@ -25,14 +26,47 @@ Carseats ist ein generischer Datensatz, der im Buch "An Introduction to Statisti
 - Age: Durchschnittsalter der lokalen Bevölkerung
 - Education: Bildungslevel an jedem Standort
 - Urban: Klassifikation, ob sich der Standort in einer städtischen oder ländlichen Region befindet
-- US: Ein Indikator der angbit, ob sich das Geschäft in US befindet oder nicht
+- US: Ein Indikator der angibt, ob sich das Geschäft in US befindet oder nicht
+
+# Lineare Regression
+Bei der Linearen Regression versucht man eine Zielvariable in Abhängigkeit durch **eine** andere Variable vorherzusagen. Das daraus entstehende Modell wird als eine Gerade dargestellt mit der
+
+Formel: y = f(x) = ax + b = $\beta_{0}$ + $\beta_{1}$x = mx + n 
+
+Das Wissen wird immersiv durch die Module llr, mlr und stl abgedeckt.
+
+# Lineare Multiple Regression
+Bei der Linearen Multiple Regression versucht man eine Zielvariable in Abhängigkeit durch **mehrere** andere Variable vorherzusagen. 
+
+Formel ausgeschrieben: y = f(X) = $\beta_{0}$ + $\beta_{1}$  $x_{1}$ + $\beta_{2}$  $x_{2}$ + ... + $\beta_{n}$  $x_{n}$
+
+Formel vektorisiert: y = f(X) = X $\cdot$ $\vec{\beta_{n}}$ + $\beta_{0}$
+
+Das Wissen wird immersiv durch die Module llr, mlr und stl abgedeckt.
+
+
+# Logistische Regression
+Bei der Logistischen Regression versucht man eine Binäre Zielvariable in Abhängigkeit durch **eine** andere Variable vorherzusagen. 
+
+Sigmoid Formel: $\sigma(z) = \frac{1}{1 + e^{-z}}$
+
+Formel fuer logistische Regression: f(x) = $\sigma(ax + b)$ = $\frac{1}{1 + e^{-(ax + b)}}$
+
+Das Wissen wird immersiv durch die Module llr, mlr und stl abgedeckt.
+
+
 
 # Auflistung der Hypothesen
-Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:
-1. Ist Sales abhaengig von Income/Advertising/Population der Region? (Lineare Regression)
-2. Hat die Differenz von Comprice und Price einen Einfluss auf den Verkauf? (Lineare Regression)
-3. Ist Sales durch mehrere Features abhaengig? (Multiple Lineare Regression)
-4. Werden in urbanen Regionen mehr Kindersitze gekauft? (Logistische Regression)
+
+Zur Analyse des Datensatzes haben wir uns folgende Fragen gestellt:\n
+
+1. Sales ist abhängig von Income/Advertising/Population der Region. (Lineare Regression)\n
+
+2. Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf. (Lineare Regression)\n
+
+3. Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen. (Multiple Lineare Regression)\n
+
+4. Bewohner von urbanen Regionen kaufen weniger Kindersitze als Bürger ländlicher Regionen.\n
 
 # Vorbereitung
 In diesem Kapitel installieren wir die notwendigen Libraries und verschaffen uns einen Überlick über den Carseats Datensatz.
@@ -60,13 +94,18 @@ data(Carseats)
 # Die ersten 6 Oberservationen ausgeben
 head(Carseats)
 ```
+### Selektieren von Spalten nach bestimmten Reihenfolgen
+```{r}
+Carseats <- Carseats %>% select(Sales, Price, CompPrice, Advertising, ShelveLoc, Urban, US,
+                    Population, Income, Age, Education,)
+```
 
 ### Fusszeile des Datensatzes ausgeben
 ```{r}
 # Die letzten 6 Observationen ausgeben
 tail(Carseats)
 ```
-Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Beruehrung und koennen ein Bild der Attribute sowie Observationen machen.
+Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Berührung und koennen ein Bild der Attribute sowie Observationen machen.
 
 ### Informationen zum Datensatz herausfinden
 ```{r}
@@ -74,6 +113,11 @@ Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Be
 str(Carseats)
 ```
 Durch str wird und die grösse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp. Weiter erkennen wir auch einige Werte die in der Spalte vorkommen. 
+
+### Reihenfolge von ShelveLoc definieren
+```{r}
+Carseats$ShelveLoc <- factor(Carseats$ShelveLoc, ordered = TRUE, levels = c("Good", "Medium", "Bad"))
+```
 
 ### Summarische Zusammenfassung von Carseats
 ```{r}
@@ -97,6 +141,7 @@ ggplot(data = Carseats, aes(x = Sales)) +
        title = "Verteilung der Sales",
        subtitle = "Carseats Datensatz")
 ```
+
 Hier in diesem Dichte-Diagramm erkennen wir die Verteilung der numerischen Variabel Sales.
 Die y Achse ist die Wahrscheinlichkeit für das Auftreten einer numerischen Sales Variabel. 
 Aus diesem Grund wird die Dichtefunktion auch oft Wahrscheinlichkeitsdichtefunktion genannt. 
@@ -152,7 +197,7 @@ Regionen die Preise in den US deutlich hoeher sind als in nicht US Laendern. Auc
 bei ShelveLoc Bad und nicht Urbanen Regionen, das die Preise fuer einen Kindersitz bei nicht US
 Laendern teurer sind.
 
-# Hypothese 1: Einfach lineare Regression
+# Hypothese 1: Einfache lineare Regression
 Ist Sales abhaengig von Income/Advertising/Population der Region?
 
 ## Sales vs. Income
@@ -161,6 +206,7 @@ Ist Sales abhaengig von Income/Advertising/Population der Region?
 plot(Sales ~ Income, data = Carseats, 
      main = "Sales vs Income", pch=21, bg = "lightblue")
 ```
+
 Bevor wir mit der Linearen Regression beginnen, mochten wir zuerst einen Streudiagramm 
 von beiden Variabeln erstellen um die Zusammenhaenge zu visualiseren. Hier erkennen wir im 
 Plot, dass die Variabeln Einkommen und Sales nicht besonders stark korrelieren, 
@@ -211,7 +257,8 @@ plot(Sales ~ Income, data = Carseats,
 # Lineares Modell hinzufügen 
 abline(lm.fit1, col = "red")
 ```
-Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot wird die Steigung ersichtlich, man sieht aber auch die starke Streuung.
+
+Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot erkennen wir, dass Income und Sales eine Punktwolke bilden. Sales streut auf der ganzen X Achse von maximalen bis minimalen beobaachteten Wert (0 - 15). Entsprechend korrelieren beide Variabeln wenig miteinander. Es gibt keinen klaren Zusammenhang. 
 
 ### Residuenanalyse
 ```{r}
@@ -266,7 +313,7 @@ plot(Sales ~ Population, data = Carseats,
      main = "Sales vs Population", pch=21, bg = "lightblue")
 abline(lm.fit2, col = "red")
 ```
-Hier in diesem Plot stellen wir die Population mit Sales sowie dem Modell zusammen. Wir erkennen, dass die Punkte sich deutlich von der roten Linie (Model) streuen
+Hier in diesem Plot stellen wir die Population mit Sales sowie dem Modell zusammen. Wir erkennen, dass die Punkte sich deutlich von der roten Linie (Model) streuen. Das Problem besteht analog zu Sales und Income.
 
 ### Residuenanalyse
 ```{r}
@@ -516,7 +563,9 @@ ggplot(Carseats, aes(x=Sales, y=Urban)) +
        title = "Sales vs Urban",
        subtitle = "Carseats Datensatz")
 ```
-Danke der visuellen Analyse von Sales und Urban wird ersichtlich, dass Urban:Yes in beide Richtungen stärker streut als Urban:No. Entsprechend wird das Modell kaum verlässliche Werte ergeben.
+Da wir in den Plots zur logistischen Regression die Sigmoid Funktion einzeichnen möchten, verwenden wir diese Darstellung bei sämtliche logistischen Regression. 
+
+Dank der visuellen Analyse von Sales und Urban wird ersichtlich, dass Urban:Yes in beide Richtungen stärker streut als Urban:No. Entsprechend wird das Modell kaum verlässliche Werte ergeben.
 
 ### Model erstellen und Auswertung
 ```{r}

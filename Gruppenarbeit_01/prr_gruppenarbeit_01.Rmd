@@ -677,7 +677,7 @@ logreg.fit2.pred <- rep(0, 181)
 logreg.fit2.pred[logreg.fit2.probs > .5] = 1
 
 # Erstellen eine Kreuztabelle (Confusions Matrix) 
-table(logreg.fit2.pred, Carseats_ex_medium$ShelveLoc_binaer)
+table("Actual Class" = Carseats_ex_medium$ShelveLoc_binaer, "Predicted Class" = logreg.fit2.pred)
 
 ```
 
@@ -707,11 +707,11 @@ precision <- 66 / (66 + 14)
 precision
 ```
 
-##### Recall
+##### Recall / Sensitivity
 Recall = True Positiv / (True Positiv + False Negativ)
 Recall ist, Anteil richtig positiv an allen richtigen Vorhersagen
 
-Recall entspricht der Anteil korrekter positiven/1 Prognosen an allen tatsächlich positiven Werten.
+Recall / Sensitivity entspricht der Anteil korrekter positiven/1 Prognosen an allen tatsächlich positiven Werten.
 
 ```{r}
 # Recall berechnen

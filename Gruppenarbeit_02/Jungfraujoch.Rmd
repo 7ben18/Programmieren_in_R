@@ -5,9 +5,9 @@ author: "Patrick Schürmann, Si Ben Tran, Gabriel Torres"
 date: "Letzte Aktualisierungen: `r format(Sys.time(), '%B %d, %Y')`"
 output:
   bookdown::html_document2:
-      code_folding: show
+      code_folding: hide
       toc: true
-      toc_depth: 3
+      toc_depth: 2
       toc_float: true
       number_sections: true
 editor_options: 
@@ -21,18 +21,19 @@ Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben d
 1) Es gibt viele Korrelationen zwischen den verschiedenen Variablen.
 2) Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
 3) Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.
-4) Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus?
+4) Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
 
-# Libraries importieren
-```{r}
+# Vorbereitung
+## Libraries importieren
+```{r, message=FALSE}
 library(plotly)
 library(corrplot)
 library(lubridate)
 library(tidyverse)
 ```
 
-# Data Wrangling
-```{r}
+## Data Wrangling
+```{r, warning=FALSE}
 data_unclean <- read.csv(file = "Meteodaten.csv", sep = ";")
 data_unclean <- data.frame(lapply(data_unclean, as.numeric))
 data_unclean$time <- ymd_hm(data_unclean$time)
@@ -50,7 +51,7 @@ data <- data %>%
     "Luftdruck" = prestas0 # in Hectopascal
   ) # Erweiterbar :)
 
-
+# Ersetzt durch lapply
 # data$Böenspitze <- as.numeric(data$Böenspitze)
 # data$Windgeschwindigkeit <- as.numeric(data$Windgeschwindigkeit)
 # data$Windrichtung <- as.numeric(data$Windrichtung)
@@ -70,6 +71,37 @@ corrData <- cor(data_unclean[3:31], use = "pairwise.complete.obs")
 corrplot(corrData, method = "ellipse", order = "alphabet", type = "upper", tl.pos = "lt")
 ```
 
+Im ganzen Datensatz haben wir zu viele Variablen um eine verständliche Visualisierung über die Korrelationen aller Variablen zu erstellen. Jedoch lohnt sich diese Erstellung dieser Visualisierung um zu bestimmmen, welche Features man im reduzierten Datensatz übernehmen möchte. Das Bundesamt für Meteorologie hat die Namen dieser Variablen kodiert, deswegen müssen wir anhand der mitgelieferten Tabelle schauen, für was diese Codes stehen:
+
+| Parameter | Einheit | Beschreibung                                                                    |
+| :-------- | :------ | :------------------------------------------------------------------------------ |
+| uto200s0  | g/m^2   | Absolute Luftfeuchtigkeit 2 m über Boden; Momentanwert                          |
+| ns2000s0  | octas   | Betrag der mittleren Wolken                                                     |
+| ns1000s0  | octas   | Betrag der untersten Wolken                                                     |
+| fkl010z1  | m/s     | Böenspitze (Sekundenböe); Maximum                                               |
+| xchills0  | °C      | Chill Temperatur; Momentanwert                                                  |
+| pva200s0  | hPa     | Dampfdruck 2 m über Boden; Momentanwert                                         |
+| pvd200s0  | hPa     | Dampfdruckdefizit 2 m über Boden; Momentanwert                                  |
+| tre2desd  | °C      | Differenz Lufttemperatur 2 m über Boden - Taupunkt; Momentanwert                |
+| tpp200s0  | °C      | Feuchtpotentielle Temperatur 2 m über Boden; Momentanwert                       |
+| tps200s0  | °C      | Feuchttemperatur (Psychrometertemperatur) 2 m über Boden; Momentanwert          |
+| nto000s0  | octas   | Gesamtbewölkung                                                                 |
+| gor000za  | W/m^2   | Globalstrahlung; Standardabweichung                                             |
+| gre000z0  | W/m^2   | Globalstrahlung; Zehnminutenmittel                                              |
+| oli000z0  | W/m^2   | Langwellige Einstrahlung; Zehnminutenmittel                                     |
+| prestas0  | hPa     | Luftdruck auf Barometerhöhe (QFE); Momentanwert                                 |
+| pp0qnhs0  | hPa     | Luftdruck reduziert auf Meeresniveau mit Standardatmosphäre (QNH); Momentanwert |
+| tre200s0  | °C      | Lufttemperatur 2 m über Boden; Momentanwert                                     |
+| pvamixs0  | g/kg    | Mischungsverhältnis                                                             |
+| uor200s0  | %       | Original Luftfeuchtigkeit 2 m über Boden; Momentanwert                          |
+| tpo200s0  | °C      | Potentielle Temperatur 2 m über Boden; Momentanwert                             |
+| ure200s0  | %       | Relative Luftfeuchtigkeit 2 m über Boden; Momentanwert                          |
+| sre000z0  | min     | Sonnenscheindauer; Zehnminutensumme                                             |
+| usp200s0  | g/kg    | Spezifische Luftfeuchtigkeit 2 m über Boden; Momentanwert                       |
+| pvaices0  | hPa     | Sättigungsdampfdruck über Eis; Momentanwert                                     |
+
+Leider sind die meisten hohen Korrelationen keine richtige Korrelationen, sondern zwei Variablen, welche etwas ähnliches beschreiben oder physikalische Zusammenhänge. Beispiel dafür ist die Korrelation von sre000z0 (Sonnenscheindauer) und gre000z0 (Globalstrahlung).
+
 ```{r}
 corrData <- data %>%
   select(
@@ -85,7 +117,7 @@ corrData <- data %>%
 corrplot(corrData, method = "ellipse", order = "alphabet", type = "upper", tl.pos = "lt")
 ```
 
-Die stärksten Korrelationen sind Windgeschwindigkeit ~ Böenspitze, LangwelligeEinstrahlung ~ Luftfeuchtigkeit und Luftdruck ~ Lufttemperatur.  
+Die stärksten Korrelationen sind Windgeschwindigkeit ~ Böenspitze, LangwelligeEinstrahlung ~ Luftfeuchtigkeit und Luftdruck ~ Lufttemperatur. Mehr Text folgt... :)
 
 ## Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
 ```{r}
@@ -117,13 +149,14 @@ plot_ly(
       rangeslider = list(visible = T),
       rangeselector = list(
         buttons = list(
-          list(count = 1, label = "1m", step = "month"),
-          list(count = 1, label = "all", step = "year")
+          list(count = 1, label = "1m", step = "month", stepmode = "backward"),
+          list(step = "all")
         )
       ),
       zerolinecolor = "#ffff",
       zerolinewidth = 2,
-      gridcolor = "ffff"
+      gridcolor = "ffff",
+      type = "date"
     ),
     yaxis = list(
       title = "",
@@ -137,7 +170,7 @@ plot_ly(
 ```
 
 ## Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.
-```{r}
+```{r, warning=FALSE}
 plot <- data %>%
   group_by(time = format(time, "%H:%M")) %>%
   summarise(
@@ -168,8 +201,8 @@ plot_ly(
       rangeslider = list(visible = T),
       rangeselector = list(
         buttons = list(
-          list(count = 1, label = "1m", step = "month"),
-          list(count = 1, label = "all", step = "year")
+          list(count = 1, label = "1m", step = "month", stepmode = "backward"),
+          list(step = "all")
         )
       ),
       zerolinecolor = "#ffff",
@@ -189,17 +222,16 @@ plot_ly(
       fillcolor = "yellow",
       line = list(color = "yellow"),
       opacity = 0.2,
-      y0 = -6.1,
-      y1 = -4.4,
       x0 = 33.4,
-      x1 = 49.1
+      x1 = 49.1,
+      y0 = -6.1,
+      y1 = -4.4
     )
   )
 ```
 
-## Wie sieht der Jahreswetterverlauf auf 3500 m Höhe aus?
-### Granularity Hour
-
+## Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
+### Erstellung der Funktion für einfaches Plotten
 ```{r}
 visualize <- function(granularity) {
   plot <- data %>%
@@ -219,9 +251,9 @@ visualize <- function(granularity) {
     width = 900,
     height = 700
   ) %>%
-    add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C") %>%
+    add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C", visible = "legendonly") %>%
     add_trace(x = ~time, y = ~mean_Luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~Sonnenscheindauer_h, name = "Sonnenscheindauer in h", visible = "legendonly") %>%
+    add_trace(x = ~time, y = ~Sonnenscheindauer_h, name = "Sonnenscheindauer in h") %>%
     add_trace(x = ~time, y = ~mean_Windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
     add_trace(x = ~time, y = ~mean_Luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
     layout(
@@ -232,8 +264,8 @@ visualize <- function(granularity) {
         rangeslider = list(visible = T),
         rangeselector = list(
           buttons = list(
-            list(count = 1, label = "1m", step = "month"),
-            list(count = 1, label = "all", step = "year")
+            list(count = 1, label = "1m", step = "month", stepmode = "backward"),
+            list(step = "all")
           )
         ),
         zerolinecolor = "#ffff",
@@ -251,6 +283,8 @@ visualize <- function(granularity) {
     )
 }
 ```
+
+### Granularity Hour
 
 ```{r}
 visualize("hour")

@@ -15,7 +15,16 @@ editor_options:
 ---
 
 # Einleitung
-Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020.
+Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020. Diese Daten haben wir vom [IDAWEB des Bundesamts für Meteorologie](https://gate.meteoswiss.ch/idaweb/login.do) erhalten. Der Bestellschein ist im Anhang enthalten.
+
+In diesem Notebook nutzen wir Plotly, um interaktive Time Series Plots zu generieren.
+Plotly ist eine benutzerfreundliche Datenvisualisierungssoftware, die hochentwickelte Visualisierungswerkzeuge bietet. Das Hinzufügen von Interaktion zu Visualisierungen eröffnet eine grosse Vielfalt an Möglichkeiten. wir können verschiedene Visualisierungen derselben Daten auf Abruf präsentieren, zoomen, schwenken, filtern und scrollen implementieren. Anbei findet man die Dokumentation von Plotly unter folgenden Link: https://plotly.com/r/.
+
+Während Plotly und GGplot beide Visualisierungen generieren, haben beide Vor- und Nachteile.
+GGplot kann mit einer sehr simplen Syntax verwendet werden, es lassen sich aber sehr einfach und modular Komplexitäten einbauen. Die Library bietet eine grosse Bandbreite an visuellen Möglichkeiten.
+Allerdings verwendet GGplot2 eine unterschiedliche Syntax als restliches R. Aus unsere Sicht ist der grösste Nachteil, dass keine interaktiven Plots möglich sind.
+
+Genau dieses Manko füllt Plotly, welches automatisch interaktive Grafiken erstellt. Sobald also dem Anwender Möglichkeiten wie die Auswahl von Daten, Zoom oder Selektion von Punkten ermöglicht werden sollen, ist Plotly die Alternative. Die kleinere Anzahl von Farbpaletten ist in diesem Fall nur ein kleiner Wehrmutstropfen.
 
 # Hypothese / Fragestellungen
 1) Es gibt viele Korrelationen zwischen den verschiedenen Variablen.
@@ -30,6 +39,7 @@ library(plotly)
 library(corrplot)
 library(lubridate)
 library(tidyverse)
+library(PerformanceAnalytics)
 ```
 
 ## Data Wrangling
@@ -41,34 +51,21 @@ data <- data_unclean
 
 data <- data %>%
   select(time,
-    "Böenspitze" = fkl010z1, # in Meter/Sekunde
-    "Windgeschwindigkeit" = fkl010za, # in Meter/Sekunde
-    "Windrichtung" = dkl010za, # in Grad
-    "Sonnenscheindauer" = sre000z0, # in Minuten
-    "Gesamtbewölkung" = nto000s0, # in octas
-    "Luftfeuchtigkeit" = ure200s0, # in Prozent
-    "Lufttemperatur" = tre200s0, # in Grad Celsius
-    "Luftdruck" = prestas0 # in Hectopascal
+    "boeenspitze" = fkl010z1, # in Meter/Sekunde
+    "windgeschwindigkeit" = fkl010za, # in Meter/Sekunde
+    "sonnenscheindauer" = sre000z0, # in Minuten
+    "gesamtbewoelkung" = nto000s0, # in octas
+    "luftfeuchtigkeit" = ure200s0, # in Prozent
+    "lufttemperatur" = tre200s0, # in Grad Celsius
+    "luftdruck" = prestas0 # in Hectopascal
   ) # Erweiterbar :)
-
-# Ersetzt durch lapply
-# data$Böenspitze <- as.numeric(data$Böenspitze)
-# data$Windgeschwindigkeit <- as.numeric(data$Windgeschwindigkeit)
-# data$Windrichtung <- as.numeric(data$Windrichtung)
-# data$Sonnenscheindauer <- as.numeric(data$Sonnenscheindauer)
-# data$Gesamtbewölkung <- as.numeric(data$Gesamtbewölkung)
-# data$Luftfeuchtigkeit <- as.numeric(data$Luftfeuchtigkeit)
-# data$Lufttemperatur <- as.numeric(data$Lufttemperatur)
-# data$Luftdruck <- as.numeric(data$Luftdruck)
-# data$Betrag_mittlere_Wolken <- as.numeric(data$Betrag_mittlere_Wolken)
-# data$Betrag_untere_Wolken <- as.numeric(data$Betrag_untere_Wolken)
 ```
 
 # Beantwortung der Fragestellungen
 ## Es gibt viele Korrelationen zwischen den verschiedenen Variablen.
 ```{r}
 corrData <- cor(data_unclean[3:31], use = "pairwise.complete.obs")
-corrplot(corrData, method = "ellipse", order = "alphabet", type = "upper", tl.pos = "lt")
+corrplot.mixed(corrData, lower = "ellipse", upper = "number", order = "alphabet", tl.pos = "lt", diag = "n", number.cex = 0.4)
 ```
 
 Im ganzen Datensatz haben wir zu viele Variablen um eine verständliche Visualisierung über die Korrelationen aller Variablen zu erstellen. Jedoch lohnt sich diese Erstellung dieser Visualisierung um zu bestimmmen, welche Features man im reduzierten Datensatz übernehmen möchte. Das Bundesamt für Meteorologie hat die Namen dieser Variablen kodiert, deswegen müssen wir anhand der mitgelieferten Tabelle schauen, für was diese Codes stehen:
@@ -102,36 +99,61 @@ Im ganzen Datensatz haben wir zu viele Variablen um eine verständliche Visualis
 
 Leider sind die meisten hohen Korrelationen keine richtige Korrelationen, sondern zwei Variablen, welche etwas ähnliches beschreiben oder physikalische Zusammenhänge. Beispiel dafür ist die Korrelation von sre000z0 (Sonnenscheindauer) und gre000z0 (Globalstrahlung).
 
+Wir entscheiden uns grundsätzlich für diese Werte:
+
+| Spalte   | Kurzbeschrieb       | Definition                                                                                                                                                                        |
+| :-------| :------------------| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| fkl010za | Windgeschwindigkeit | Die Windgeschwindigkeit ist die Geschwindigkeit der Luft gegenüber dem Boden.                                                                                                     |
+| sre000z0 | Sonnenscheindauer   | Als Sonnenschein wird zweierlei bezeichnet: der Lichtschein der Sonne (also die Wirkung der Sonnenstrahlen auf die Erde), und eine Wetterlage mit geringer oder keiner Bewölkung. |
+| nto000s0 | Gesamtbewölkung     | Eine Schätzung, wie viele Achtel des Himmels mit Wolken bedeckt ist.                                                                                                              |
+| ure200s0 | Luftfeuchtigkeit    | Die Luftfeuchtigkeit oder Luftfeuchte ist der Anteil des Wasserdampfs am Gasgemisch der Luft.                                                                                     |
+| tre200s0 | Lufttemperatur      | Als Lufttemperatur wird jene Temperatur der bodennahen Atmosphäre bezeichnet, die weder von Sonnenstrahlung noch von Bodenwärme oder Wärmeleitung beeinflusst ist.                |
+| prestas0 | Luftdruck           | Der Luftdruck an einem beliebigen Ort der Erdatmosphäre ist der hydrostatische Druck der Luft, der an diesem Ort herrscht.                                                        |
+                                                        |
+                                                 
+Aus folgenden Gründen:
+
+| Kurzbeschrieb       | Begründung                                                                                                                  |
+| :------------------ | :-------------------------------------------------------------------------------------------------------------------------- |
+| Windgeschwindigkeit | Die Windgeschwindigkeit ist eine der meist beachteten Wetterkennzahlen. Wir verwenden sie zur Überprüfung der Korrelationen |
+| Sonnenscheindauer   | Diese Werte verwenden wir, um die Aufgabe 4 zu beantworten.                                                                 |
+| Gesamtbewölkung     | Diese Werte verwenden wir, um die Aufgabe 4 zu beantworten                                                                  |
+| Luftfeuchtigkeit    | Diese Werte verwenden wir, um mögliche Korrelationen festzustellen.                                                         |
+| Lufttemperatur      | Diese Werte verwenden wir, um die Aufgabe 2 und 3 zu beantworten.                                                           |
+| Luftdruck           | Die Werte verwenden wir, um den physikalischen Zusammenhang zwischen Druck und Temperatur zu bestätigen.                    |
+
 ```{r}
 corrData <- data %>%
   select(
-    "Böenspitze",
-    "Windgeschwindigkeit",
-    "Windrichtung",
-    "Sonnenscheindauer",
-    "Luftfeuchtigkeit",
-    "Lufttemperatur",
-    "Luftdruck",
+    "boeenspitze",
+    "windgeschwindigkeit",
+    "sonnenscheindauer",
+    "luftfeuchtigkeit",
+    "lufttemperatur",
+    "luftdruck",
   ) %>%
   cor(., use = "pairwise.complete.obs")
-corrplot(corrData, method = "ellipse", order = "alphabet", type = "upper", tl.pos = "lt")
+
+corrplot.mixed(corrData, lower = "ellipse", upper = "number", order = "alphabet", tl.pos = "lt", diag = "u")
 ```
 
 Die stärksten Korrelationen sind Windgeschwindigkeit ~ Böenspitze, LangwelligeEinstrahlung ~ Luftfeuchtigkeit und Luftdruck ~ Lufttemperatur. Mehr Text folgt... :)
 
 ## Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
+Hier nehmen wir 0°C als Referenz, da der Gefrierpunkt von Wasser (unter idealen Bedingungen) bei 0°C liegt. 
 ```{r}
 granularity <- "day"
 
 plot <- data %>%
   group_by(time = floor_date(time, granularity)) %>%
   summarise(
-    mean_Lufttemperatur = mean(Lufttemperatur, na.rm = T),
-    mean_Luftfeuchtigkeit = mean(Luftfeuchtigkeit, na.rm = T),
-    mean_Windgeschwindigkeit = mean(Windgeschwindigkeit, na.rm = T),
-    mean_Luftdruck = mean(Luftdruck, na.rm = T),
-    Sonnenscheindauer_h = sum(Sonnenscheindauer, na.rm = T) / 60
+    mean_lufttemperatur = mean(lufttemperatur, na.rm = T),
+    mean_luftfeuchtigkeit = mean(luftfeuchtigkeit, na.rm = T),
+    mean_windgeschwindigkeit = mean(windgeschwindigkeit, na.rm = T),
+    mean_luftdruck = mean(luftdruck, na.rm = T),
+    sonnenscheindauer_h = sum(sonnenscheindauer, na.rm = T) / 60
   )
+plot$windchill <- (13.12 + 0.6215 * plot$mean_lufttemperatur) + (0.3965 * plot$mean_lufttemperatur - 11.37) * (plot$mean_windgeschwindigkeit * 3.6)^0.16
 
 plot_ly(
   data = plot,
@@ -140,7 +162,6 @@ plot_ly(
   width = 900,
   height = 700
 ) %>%
-  add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C") %>%
   layout(
     showlegend = TRUE,
     title = "Wetterverlauf im Jungfraujoch über das Jahr 2020",
@@ -153,32 +174,100 @@ plot_ly(
           list(step = "all")
         )
       ),
-      zerolinecolor = "#ffff",
+      zerolinecolor = "#C5C5C5",
       zerolinewidth = 2,
-      gridcolor = "ffff",
+      gridcolor = "#C5C5C5",
       type = "date"
     ),
     yaxis = list(
       title = "",
-      zerolinecolor = "#ffff",
+      zerolinecolor = "#C5C5C5",
       zerolinewidth = 2,
-      gridcolor = "ffff"
+      gridcolor = "#C5C5C5"
     ),
-    plot_bgcolor = "#e5ecf6",
-    margin = 0.2
-  )
+    plot_bgcolor = "#ffff",
+    margin = 0.2,
+    shapes = list(
+      list(
+        type = "area",
+        fillcolor = "lightblue",
+        line = list(color = "lightblue"),
+        opacity = 0.2,
+        x0 = "2020-01-01",
+        x1 = "2020-03-21",
+        yref = "paper",
+        y0 = 0,
+        y1 = 1
+      ),
+      list(
+        type = "area",
+        fillcolor = "green",
+        line = list(color = "green"),
+        opacity = 0.1,
+        x0 = "2020-03-21",
+        x1 = "2020-06-21",
+        yref = "paper",
+        y0 = 0,
+        y1 = 1
+      ),
+      list(
+        type = "area",
+        fillcolor = "yellow",
+        line = list(color = "yellow"),
+        opacity = 0.15,
+        x0 = "2020-06-21",
+        x1 = "2020-09-23",
+        yref = "paper",
+        y0 = 0,
+        y1 = 1
+      ),
+      list(
+        type = "area",
+        fillcolor = "chocolate",
+        line = list(color = "chocolate"),
+        opacity = 0.1,
+        x0 = "2020-09-23",
+        x1 = "2020-12-21",
+        yref = "paper",
+        y0 = 0,
+        y1 = 1
+      ),
+      list(
+        type = "area",
+        fillcolor = "lightblue",
+        line = list(color = "lightblue"),
+        opacity = 0.2,
+        x0 = "2020-12-21",
+        x1 = "2020-12-31",
+        yref = "paper",
+        y0 = 0,
+        y1 = 1
+      )
+    )
+  ) %>%
+  add_trace(x = ~time, y = ~mean_lufttemperatur, name = "Lufttemperatur °C", line = list(color = "black")) %>% 
+  add_trace(x = ~time, y = ~windchill, name = "Gefühlte Temperatur (Windchill) °C", line = list(color = "red"), opacity = 0.2)
 ```
+
+Dieser Plot wurde anhand von Hintergrundsfarben in Jahreszeiten unterteilt.
+
+| Farbe | Jahreszeit |
+| :---- | :--------- |
+| Blau  | Winter     |
+| Grün  | Frühling   |
+| Gelb  | Sommer     |
+| Braun | Herbst     |
 
 ## Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.
 ```{r, warning=FALSE}
 plot <- data %>%
   group_by(time = format(time, "%H:%M")) %>%
   summarise(
-    mean_Lufttemperatur = mean(Lufttemperatur, na.rm = T),
-    mean_Luftfeuchtigkeit = mean(Luftfeuchtigkeit, na.rm = T),
-    mean_Windgeschwindigkeit = mean(Windgeschwindigkeit, na.rm = T),
-    mean_Luftdruck = mean(Luftdruck, na.rm = T),
-    Sonnenscheindauer_h = mean(Sonnenscheindauer, na.rm = T)
+    mean_lufttemperatur = mean(lufttemperatur, na.rm = T),
+    mean_luftfeuchtigkeit = mean(luftfeuchtigkeit, na.rm = T),
+    mean_windgeschwindigkeit = mean(windgeschwindigkeit, na.rm = T),
+    mean_luftdruck = mean(luftdruck, na.rm = T),
+    sonnenscheindauer_h = mean(sonnenscheindauer, na.rm = T)
   )
 
 plot_ly(
@@ -188,11 +277,11 @@ plot_ly(
   width = 900,
   height = 700
 ) %>%
-  add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C") %>%
-  add_trace(x = ~time, y = ~mean_Luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
-  add_trace(x = ~time, y = ~Sonnenscheindauer_h, name = "Sonnenscheindauer in h", visible = "legendonly") %>%
-  add_trace(x = ~time, y = ~mean_Windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
-  add_trace(x = ~time, y = ~mean_Luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~mean_lufttemperatur, name = "Lufttemperatur °C") %>%
+  add_trace(x = ~time, y = ~mean_luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~sonnenscheindauer_h, name = "Sonnenscheindauer in h", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~mean_windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
+  add_trace(x = ~time, y = ~mean_luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
   layout(
     showlegend = TRUE,
     title = "Durchschnittliche Temperatur über den Tag auf dem Jungfraujoch im Jahr 2020",
@@ -205,17 +294,17 @@ plot_ly(
           list(step = "all")
         )
       ),
-      zerolinecolor = "#ffff",
+      zerolinecolor = "#C5C5C5",
       zerolinewidth = 2,
-      gridcolor = "ffff"
+      gridcolor = "#C5C5C5"
     ),
     yaxis = list(
       title = "",
-      zerolinecolor = "#ffff",
+      zerolinecolor = "#C5C5C5",
       zerolinewidth = 2,
-      gridcolor = "ffff"
+      gridcolor = "#C5C5C5"
     ),
-    plot_bgcolor = "#e5ecf6",
+    plot_bgcolor = "#ffffff",
     margin = 0.2,
     shapes = list(
       type = "rect",
@@ -230,6 +319,13 @@ plot_ly(
   )
 ```
 
+Markierung beim Plot:
+
+| Farbe | Bedeutung  |
+| :---- | :--------- |
+| Gelb  | Zeitintervall zwischen frühesten und spätesten Sonnenaufgang 2020 |
+
+
 ## Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
 ### Erstellung der Funktion für einfaches Plotten
 ```{r}
@@ -237,11 +333,11 @@ visualize <- function(granularity) {
   plot <- data %>%
     group_by(time = floor_date(time, granularity)) %>%
     summarise(
-      mean_Lufttemperatur = mean(Lufttemperatur, na.rm = T),
-      mean_Luftfeuchtigkeit = mean(Luftfeuchtigkeit, na.rm = T),
-      mean_Windgeschwindigkeit = mean(Windgeschwindigkeit, na.rm = T),
-      mean_Luftdruck = mean(Luftdruck, na.rm = T),
-      Sonnenscheindauer_h = sum(Sonnenscheindauer, na.rm = T) / 60
+      mean_lufttemperatur = mean(lufttemperatur, na.rm = T),
+      mean_luftfeuchtigkeit = mean(luftfeuchtigkeit, na.rm = T),
+      mean_windgeschwindigkeit = mean(windgeschwindigkeit, na.rm = T),
+      mean_luftdruck = mean(luftdruck, na.rm = T),
+      sonnenscheindauer_h = sum(sonnenscheindauer, na.rm = T) / 60
     )
 
   plot_ly(
@@ -251,11 +347,11 @@ visualize <- function(granularity) {
     width = 900,
     height = 700
   ) %>%
-    add_trace(x = ~time, y = ~mean_Lufttemperatur, name = "Lufttemperatur °C", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~mean_Luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~Sonnenscheindauer_h, name = "Sonnenscheindauer in h") %>%
-    add_trace(x = ~time, y = ~mean_Windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~mean_Luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
+    add_trace(x = ~time, y = ~mean_lufttemperatur, name = "Lufttemperatur °C", visible = "legendonly") %>%
+    add_trace(x = ~time, y = ~mean_luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
+    add_trace(x = ~time, y = ~sonnenscheindauer_h, name = "Sonnenscheindauer in h") %>%
+    add_trace(x = ~time, y = ~mean_windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
+    add_trace(x = ~time, y = ~mean_luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
     layout(
       showlegend = TRUE,
       title = "Wetterverlauf im Jungfraujoch über das Jahr 2020",

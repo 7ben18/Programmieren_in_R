@@ -194,8 +194,8 @@ Regionen die Preise in den US deutlich hoeher sind als in nicht US Laendern. Auc
 bei ShelveLoc Bad und nicht Urbanen Regionen, das die Preise fuer einen Kindersitz bei nicht US
 Laendern teurer sind.
 
-# Hypothese 1: Einfache lineare Regression
-Sales ist abhängig von Income/Advertising/Population der Region.
+# Hypothese 1: Sales ist abhängig von Income/Advertising/Population der Region.
+Thema: Einfache lineare Regression
 
 ## Sales vs. Income
 ### Visualisierung von Sales und Income
@@ -259,22 +259,19 @@ plot(lm.fit1)
 
 Nun, da wir unser Modell haben, können wir feststellen, ob es ein gutes Modell ist, indem wir bei den Residuen folgende 3 Bedingungen überprüfen:
 
-Der Fehler sollte nicht abhängig sein
-Der Erwartungswert sollte bei 0 liegen.
-Die Residuen sollten einer Normalverteilung folgen
+- Der Fehler sollte nicht abhängig sein
+- Der Erwartungswert sollte bei 0 liegen.
+- Die Residuen sollten einer Normalverteilung folgen
 
-Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. 
-Der Median der Residuen entspricht -0.18, dieses Kriterium ist erfüllt.
+Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median der Residuen entspricht -0.18, dieses Kriterium ist erfüllt.
 
 Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
 
-Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die 
-Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. 
-Auch dieses Kriterium ist somit erfüllt.
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
-Ueberpreufen vom Erwartungswert = 0 + Normalverteilt
+Ueberpreufen vom Erwartungswert = 0 und Normalverteilt:
 ```{r}
 hist(lm.fit1$residuals, 
      main = "Verteilung der Residuen", col = "lightblue") 
@@ -322,18 +319,15 @@ plot(lm.fit2)
 
 Auch in diesem Model ueberpruefen wir die folgenden Kriterien des Models.
 
-Der Fehler sollte nicht abhängig sein
-Der Erwartungswert sollte bei 0 liegen.
-Die Residuen sollten einer Normalverteilung folgen
+- Der Fehler sollte nicht abhängig sein
+- Der Erwartungswert sollte bei 0 liegen.
+- Die Residuen sollten einer Normalverteilung folgen
 
-Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. 
-Der Median der Residuen entspricht -0.0597, dieses Kriterium ist erfüllt.
+Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median der Residuen entspricht -0.0597, dieses Kriterium ist erfüllt.
 
 Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
 
-Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die 
-Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. 
-Auch dieses Kriterium ist somit erfüllt.
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
@@ -381,18 +375,15 @@ plot(lm.fit3)
 
 Auch in diesem Model ueberpruefen wir die folgenden Kriterien des Models.
 
-Der Fehler sollte nicht abhängig sein
-Der Erwartungswert sollte bei 0 liegen.
-Die Residuen sollten einer Normalverteilung folgen
+- Der Fehler sollte nicht abhängig sein
+- Der Erwartungswert sollte bei 0 liegen.
+- Die Residuen sollten einer Normalverteilung folgen
 
-Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. 
-Der Median der Residuen entspricht -0.1037, dieses Kriterium ist erfüllt.
+Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median der Residuen entspricht -0.1037, dieses Kriterium ist erfüllt.
 
 Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
 
-Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die 
-Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. 
-Auch dieses Kriterium ist somit erfüllt.
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
@@ -411,9 +402,9 @@ Leider auch bei Advertising und Sales ist kein linearer Zusammenhang erslichtlic
 
 Keiner der Linearen Modelle hat einen Linearen Zusammenhang. Mit einem einfachen Linearen Modell ist es nicht moeglich Sales vorhherzusagen. 
 
-# Hypothese 2: Einfach lineare Regression mit berechneten Daten
+# Hypothese 2: Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
 
-Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
+Thema: Einfach lineare Regression mit berechneten Daten
 
 ## Sales vs. Preisdifferenz zu Konkurrenz
 ### Berechnung der Spalte DiffPrice
@@ -458,18 +449,15 @@ plot(lm.fit4)
 
 Auch in diesem Modell ueberpruefen wir die folgenden Kriterien des Modells.
 
-Der Fehler sollten unabhängig sein.
-Der Erwartungswert sollte bei 0 liegen.
-Die Residuen sollten einer Normalverteilung folgen.
+- Der Fehler sollten unabhängig sein.
+- Der Erwartungswert sollte bei 0 liegen.
+- Die Residuen sollten einer Normalverteilung folgen.
 
-Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. 
-Der Median der Residuen entspricht -0.2678, dieses Kriterium ist erfüllt.
+Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median der Residuen entspricht -0.2678, dieses Kriterium ist erfüllt.
 
 Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
 
-Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die 
-Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. 
-Auch dieses Kriterium ist somit erfüllt.
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
@@ -486,9 +474,9 @@ Die zweite Hypothese hat einen deutlich besseren R^2 Score verglichen zu den ers
 
 Es ist interessant zu erkennen, dass der Preisunterschied zwischen der Konkurrenz und dem Produkt einen ganz leichten negativen Trend zeigt. Nichts destotrotz, sind wir mit diesem Modell nicht zufrieden und begeben uns direkt in die Hypothese 3. 
 
-# Hypothese 3: Multiple lineare Regression
+# Hypothese 3: Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen.
 
-Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen.
+Thema: Multiple lineare Regression
 
 ## Sales vs. mehrere Features
 
@@ -555,9 +543,9 @@ Hypothese: Sales lässt sich durch die Verwendung von mehreren Features zuverlä
 
 Unser letztes Modell hat gezeigt, dass mit einer sorgfältigne Auswahl der Variabeln Sales gut und zuverlässig erklärt werden kann. In der Praxis könnten noch mehr Kombinationen (Variabeln, Interaktionen, exponentielle Zusammenhänge etc...) untersucht werden. In dieser Abgabe lassen wir das weg, weil es sich lediglich um Wiederholungen der gezeigten Funktionen handelt.
 
-# Hypothese 4: Logistische Regression
+# Hypothese 4: Bewohner von urbanen Regionen kaufen weniger Kindersitze als Bürger ländlicher Regionen.
 
-Bewohner von urbanen Regionen kaufen weniger Kindersitze als Bürger ländlicher Regionen.
+Thema: Logistische Regression
 
 ## Sales vs. Urban
 

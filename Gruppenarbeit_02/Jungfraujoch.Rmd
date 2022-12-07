@@ -27,7 +27,7 @@ Allerdings verwendet GGplot2 eine unterschiedliche Syntax als restliches R. Aus 
 Genau dieses Manko füllt Plotly, welches automatisch interaktive Grafiken erstellt. Sobald also dem Anwender Möglichkeiten wie die Auswahl von Daten, Zoom oder Selektion von Punkten ermöglicht werden sollen, ist Plotly die Alternative. Die kleinere Anzahl von Farbpaletten ist in diesem Fall nur ein kleiner Wehrmutstropfen.
 
 # Hypothese / Fragestellungen
-1) Es gibt viele Korrelationen zwischen den verschiedenen Variablen.
+1) Es gibt viele ausgeprägte Korrelationen zwischen den verschiedenen Variablen.
 2) Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
 3) Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.
 4) Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
@@ -62,7 +62,7 @@ data <- data %>%
 ```
 
 # Beantwortung der Fragestellungen
-## Es gibt viele Korrelationen zwischen den verschiedenen Variablen.
+## Es gibt viele ausgeprägte Korrelationen zwischen den verschiedenen Variablen.
 ```{r}
 corrData <- cor(data_unclean[3:31], use = "pairwise.complete.obs")
 corrplot.mixed(corrData, lower = "ellipse", upper = "number", order = "alphabet", tl.pos = "lt", diag = "n", number.cex = 0.4)
@@ -116,10 +116,10 @@ Aus folgenden Gründen:
 | Kurzbeschrieb       | Begründung                                                                                                                  |
 | :------------------ | :-------------------------------------------------------------------------------------------------------------------------- |
 | Windgeschwindigkeit | Die Windgeschwindigkeit ist eine der meist beachteten Wetterkennzahlen. Wir verwenden sie zur Überprüfung der Korrelationen |
-| Sonnenscheindauer   | Diese Werte verwenden wir, um die Aufgabe 4 zu beantworten.                                                                 |
-| Gesamtbewölkung     | Diese Werte verwenden wir, um die Aufgabe 4 zu beantworten                                                                  |
+| Sonnenscheindauer   | Dieses Feature wird benötigt, um die vierte Hypothese bestätigen oder verwerfen zu können.                                                                 |
+| Gesamtbewölkung     | Dieses Feature wird benötigt, um die vierte Hypothese bestätigen oder verwerfen zu können.                                                                 |
 | Luftfeuchtigkeit    | Diese Werte verwenden wir, um mögliche Korrelationen festzustellen.                                                         |
-| Lufttemperatur      | Diese Werte verwenden wir, um die Aufgabe 2 und 3 zu beantworten.                                                           |
+| Lufttemperatur      | Dieses Feature wird benötigt, um die zweite und dritte Hypothese bestätigen oder verwerfen zu können.                                                         |
 | Luftdruck           | Die Werte verwenden wir, um den physikalischen Zusammenhang zwischen Druck und Temperatur zu bestätigen.                    |
 
 ```{r}
@@ -137,10 +137,12 @@ corrData <- data %>%
 corrplot.mixed(corrData, lower = "ellipse", upper = "number", order = "alphabet", tl.pos = "lt", diag = "u")
 ```
 
-Die stärksten Korrelationen sind Windgeschwindigkeit ~ Böenspitze, LangwelligeEinstrahlung ~ Luftfeuchtigkeit und Luftdruck ~ Lufttemperatur. Mehr Text folgt... :)
+Die einzigen ausgeprägten Korrelationen (+/- 0.7) sind Luftdruck ~ Lufttemperatur und Böenspitzen ~ Windgeschwindigkeit. Leider ist die erste Korrelation ein physikalischer Zusammenhang. Die zweite Korrelation ist auch nicht überraschend, da der Wert der Böenspitzen abhängig von der Geschwindkeit des Windes ist. Die stärkste negative Korrelation hat einen Wert von nur -0.39.
+
+Die Hypothese verwerfen wir, da wir im kleinen Korrelationsplot nur zwei Werte über 0.7 haben. Diese sind erst noch nicht aussagekräftig, wie wir gerade beschrieben haben.
 
 ## Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
-Hier nehmen wir 0°C als Referenz, da der Gefrierpunkt von Wasser (unter idealen Bedingungen) bei 0°C liegt. 
+Hier nehmen wir 0°C als Referenz, da der Gefrierpunkt von Wasser (unter idealen Bedingungen) bei 0°C liegt. Das Jungfraujoch ist auch das obere Ende des grössten Gletschers der Schweiz. Entsprechend wäre es für diesen Gletscher schlecht, zu hohe Temperaturen erleiden zu müssen.
 ```{r}
 granularity <- "day"
 
@@ -258,6 +260,8 @@ Dieser Plot wurde anhand von Hintergrundsfarben in Jahreszeiten unterteilt.
 | Gelb  | Sommer     |
 | Braun | Herbst     |
 
+Aufgrund der visuellen Zeitreihenanalyse verwerfen wir die Hypothese, da in diesem Jahr die mittlere Tagestemperatur im Sommer regelmässig über 0°C steigt.
+
 ## Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.
 ```{r, warning=FALSE}
 plot <- data %>%
@@ -325,8 +329,11 @@ Markierung beim Plot:
 | :---- | :--------- |
 | Gelb  | Zeitintervall zwischen frühesten und spätesten Sonnenaufgang 2020 |
 
+Die mittlere Temperatur befindet sich tatsächlich zwischen vier und fünf Uhr am tiefsten Punkt. Da der berechnete früheste Sonnenenaufgang im Jahr 2020 kurz nach 05:30 (auf dem Berg oben vermutlich noch früher) war, bestätigen wir unsere Hypothese.
 
 ## Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
+Zur Beantwortung der Hypothese berechnen wir die die Anzahl Stunden, an welchen die Sonne gescheint hat. Dies machen wir mit der Granularität von einer Stunde. 
+
 ### Erstellung der Funktion für einfaches Plotten
 ```{r}
 visualize <- function(granularity) {
@@ -347,14 +354,10 @@ visualize <- function(granularity) {
     width = 900,
     height = 700
   ) %>%
-    add_trace(x = ~time, y = ~mean_lufttemperatur, name = "Lufttemperatur °C", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~mean_luftfeuchtigkeit, name = "Luftfeuchtigkeit in %", visible = "legendonly") %>%
     add_trace(x = ~time, y = ~sonnenscheindauer_h, name = "Sonnenscheindauer in h") %>%
-    add_trace(x = ~time, y = ~mean_windgeschwindigkeit, name = "Windgeschwindigkeit in m/s", visible = "legendonly") %>%
-    add_trace(x = ~time, y = ~mean_luftdruck, name = "Luftdruck in hPa", visible = "legendonly") %>%
     layout(
-      showlegend = TRUE,
-      title = "Wetterverlauf im Jungfraujoch über das Jahr 2020",
+      showlegend = FALSE,
+      title = "Sonnenscheindauer auf dem Jungraujoch im 2020 in Stunden",
       xaxis = list(
         title = "Zeitachse",
         rangeslider = list(visible = T),
@@ -386,11 +389,15 @@ visualize <- function(granularity) {
 visualize("hour")
 ```
 
+Mit stündlichen Daten kann unsere Hypothese nicht beantwortet werden. Wir wechseln deshalb auf tägliche Werte.
+
 ### Granularity Day
 
 ```{r}
 visualize("day")
 ```
+
+Anhand täglicher Werte können wir unsere Hypothese immernoch nicht beantworten, die Grafik ist noch viel zu unübersichtlich. Wir schalten deshalb auf wöchentliche Werte.
 
 ### Granularity Week
 
@@ -398,8 +405,4 @@ visualize("day")
 visualize("week")
 ```
 
-### Granularity Month
-
-```{r}
-visualize("month")
-```
+Die Sonnenscheindauer variiert durch das ganze Jahr stark, deswegen verwerfen wir unsere Hypothese. Vermutlich waren das Schlechtwetterperioden mit viel Bewölkung über mehrere Tage oder Wochen. Für diese Hypothese würde sich ein Vergleich über mehrere Jahre gut anbieten.

@@ -219,7 +219,7 @@ Mit der Funktion "lm()" wird das Lineare Modell erstellt und trainiert.
 summary(lm.fit1)
 ```
 
-R hat nun die linear Regression erstellt. Die wichtigsten Werte lassen sich mit der Methode summary() anzeigen. Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Einkommen steigt der Verkauf um 15 Stück. Dies erscheint im Verhältnis zum Intercept wenig, es müsste darüber diskutiert werden, ob dieser Erkenntnis für einen möglichen Kunden aussagekräftig ist.Anhand vom P Wert (0.00231) lässt sich aber feststellen, dass die Steigung siginfikant ist. Das Einkommen der Region hat also einen Einfluss auf die Verkaufszahlen. Vor einer endgültigen Aussage müssen aber weitere Untersuchungen, wie die Überprüfung der Residuen, durchgeführt werden. Diese Untersuchung führen wir später durch.
+R hat nun die linear Regression erstellt. Die wichtigsten Werte lassen sich mit der Methode summary() anzeigen. Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Einkommen steigt der Verkauf um 15 Stück. Dies erscheint im Verhältnis zum Intercept wenig, es müsste darüber diskutiert werden, ob diese Erkenntnis für einen möglichen Kunden aussagekräftig ist. Anhand vom P Wert (0.00231) lässt sich aber feststellen, dass die Steigung siginfikant ist. Das Einkommen der Region hat also einen Einfluss auf die Verkaufszahlen. Vor einer endgültigen Aussage müssen aber weitere Untersuchungen, wie die Überprüfung der Residuen, durchgeführt werden. Diese Untersuchung führen wir später durch.
 
 ### Übersicht der Modell Methoden
 ```{r}
@@ -280,9 +280,9 @@ hist(lm.fit1$residuals,
 
 Hypothese: Sales ist abhängig von Income?
 
-Wir erkennen aufgrund des Streudiagramm, dass eine Korrelation zwischen einkommen und Sales kaum vorhanden sind. Das Lineare Modell hat einen R^2 von 0.02, dies bestaetigt die Aussage. 
+Wir erkennen aufgrund des Streudiagramm, dass eine Korrelation zwischen einkommen und Sales kaum vorhanden ist. Das Lineare Modell hat einen R^2 von 0.02, dies bestaetigt die Aussage. 
 
-Aus diesem Grund ist Sales nicht abhaengig von Income.
+Aus diesem Grund ist Sales nicht abhängig von Income.
 
 ## Sales vs. Population
 ### Visualisierung von Sales und Population
@@ -291,7 +291,7 @@ plot(Sales ~ Population, data = Carseats,
      main = "Sales vs Population", pch=21, bg = "lightblue")
 ```
 
-Bevor das Modell erstellt wird, visualisieren wir die beiden Variabeln Population und Sales in eine Streudiagramm.
+Bevor das Modell erstellt wird, visualisieren wir beide Variabeln Population und Sales in einem Streudiagramm.
 
 ### Model erstellen und Auswertung
 ```{r}
@@ -299,8 +299,7 @@ lm.fit2 <- lm(Sales ~ Population, data = Carseats)
 summary(lm.fit2)
 ```
 
-Die Einfluss der Population ist nicht signifikant. Der folgende Plot bestätigt, 
-dass die Steigung 0 beträgt. 
+Die Einfluss der Population ist nicht signifikant. Der folgende Plot bestätigt, dass die Steigung 0 beträgt. 
 
 ### Visualisierung der Daten mit dem Regressions Modell (Visualsierung ausbessern)
 ```{r}
@@ -317,7 +316,7 @@ par(mfrow = c(2, 2))
 plot(lm.fit2) 
 ```
 
-Auch in diesem Model ueberpruefen wir die folgenden Kriterien des Models.
+Auch in diesem Model überpruefen wir die folgenden Kriterien des Models.
 
 - Der Fehler sollte nicht abhängig sein
 - Der Erwartungswert sollte bei 0 liegen.
@@ -327,7 +326,7 @@ Das mittlere Kriterium lässt sich aus der Summary Funktion ablesen. Der Median 
 
 Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funktionen lassen sich vier unterschiedliche Überprüfungen der Residuen anzeigen.
 
-Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
+Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht einem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
@@ -339,7 +338,7 @@ hist(lm.fit2$residuals,
 
 Hypothese: Sales ist abhängig von Population?
 
-Leider auch hier, aehnlich wie zu Sales vs. Income erkennen wir keinen Trend. Der R^2 Score betraegt 0.002547, also auch kein Gutes Modell. 
+Leider auch hier, ähnlich wie zu Sales vs. Income erkennen wir keinen Trend. Der R^2 Score beträgt 0.002547, also auch kein Gutes Modell. 
 
 Aus diesem Grund, stimmt auch diese Hypothese nicht.
 
@@ -365,7 +364,7 @@ plot(Sales ~ Advertising, data = Carseats,
 abline(lm.fit3, col = "red")
 ```
 
-Leider erkennen wir schon hier, dass es keinen Trend von Sales vs. Advertising vorhanden ist. Vollstaendigkeitshalber fuehren wir die Analysen trotzdem durch.
+Leider erkennen wir schon hier, dass es keinen Trend von Sales vs. Advertising vorhanden ist. Vollständigkeitshalber führen wir die Analysen trotzdem durch.
 
 ### Residuenanalyse
 ```{r}
@@ -373,7 +372,7 @@ par(mfrow = c(2, 2))
 plot(lm.fit3) 
 ```
 
-Auch in diesem Model ueberpruefen wir die folgenden Kriterien des Models.
+Auch in diesem Model überpruefen wir die folgenden Kriterien des Models.
 
 - Der Fehler sollte nicht abhängig sein
 - Der Erwartungswert sollte bei 0 liegen.
@@ -396,11 +395,11 @@ hist(lm.fit3$residuals,
 
 Hypothese: Sales ist abhängig von Advertising?
 
-Leider auch bei Advertising und Sales ist kein linearer Zusammenhang erslichtlich. In der 3. Hypothese beschaeftigen wir uns mit der multiplen Linearen Regression, diese wird bestimmt besser sein als bei der Linearen Regression. 
+Leider auch bei Advertising und Sales ist kein linearer Zusammenhang erslichtlich. In der 3. Hypothese beschäftigen wir uns mit der multiplen Linearen Regression, diese wird bestimmt besser sein als bei der Linearen Regression. 
 
 ## Interpretation von Hypothese 1
 
-Keiner der Linearen Modelle hat einen Linearen Zusammenhang. Mit einem einfachen Linearen Modell ist es nicht moeglich Sales vorhherzusagen. 
+Keiner der Linearen Modelle hat einen Linearen Zusammenhang. Mit einem einfachen Linearen Modell ist es nicht möglich Sales vorherzusagen. 
 
 # Hypothese 2: Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
 
@@ -409,7 +408,7 @@ Thema: Einfach lineare Regression mit berechneten Daten
 ## Sales vs. Preisdifferenz zu Konkurrenz
 ### Berechnung der Spalte DiffPrice
 
-Hinzufügen einer Spalte mit der Differenz zwischen unserem Preis und der der Konkurrenz.
+Hinzufügen einer Spalte mit der Differenz zwischen unserem Preis und der Konkurrenz.
 
 ```{r}
 Carseats <- Carseats %>% mutate(DiffPrice = Price - CompPrice) 
@@ -447,7 +446,7 @@ par(mfrow = c(2, 2))
 plot(lm.fit4) 
 ```
 
-Auch in diesem Modell ueberpruefen wir die folgenden Kriterien des Modells.
+Auch in diesem Modell uüberpruefen wir die folgenden Kriterien des Modells.
 
 - Der Fehler sollten unabhängig sein.
 - Der Erwartungswert sollte bei 0 liegen.
@@ -470,7 +469,7 @@ hist(lm.fit4$residuals,
 
 Hypothese: Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
 
-Die zweite Hypothese hat einen deutlich besseren R^2 Score verglichen zu den ersten drei Modellen bei der Hypothese 1. Die Differenz von Comprice und Price hat keinen grossen Einfluss auf Sales, weil das Bestimmtheitsmass 0.3575 betraegt. 
+Die zweite Hypothese hat einen deutlich besseren R^2 Score verglichen zu den ersten drei Modellen bei der Hypothese 1. Die Differenz von Comprice und Price hat keinen grossen Einfluss auf Sales, weil das Bestimmtheitsmass 0.3575 beträgt. 
 
 Es ist interessant zu erkennen, dass der Preisunterschied zwischen der Konkurrenz und dem Produkt einen ganz leichten negativen Trend zeigt. Nichts destotrotz, sind wir mit diesem Modell nicht zufrieden und begeben uns direkt in die Hypothese 3. 
 
@@ -480,7 +479,7 @@ Thema: Multiple lineare Regression
 
 ## Sales vs. mehrere Features
 
-Nachdem wir festgestellt haben, dass sich Sales nicht durch einzelne Variabeln erklären lasst, untersuchen wir die Möglichkeit, ob Sales sich durch mehrere Features erklaeren laesst. Wir werden sie zuerst gegenüber zwei Variabel untersuchen. Danach schauen wir uns den ganzen Datensatz an und behalten danach die aussagekräftigsten Variabeln.
+Nachdem wir festgestellt haben, dass sich Sales nicht durch einzelne Variabeln erklären lasst, untersuchen wir die Möglichkeit, ob Sales sich durch mehrere Features erklären lässt. Wir werden sie zuerst gegenüber zwei Variabel untersuchen. Danach schauen wir uns den ganzen Datensatz an und behalten danach die aussagekräftigsten Variabeln.
 
 ### Modelle erstellen und Auswertungen
 
@@ -514,7 +513,7 @@ Mit dem Code "Sales ~ ." können wir ein Regressionsmodell Sales gegenüber alle
 
 Dank der Auswertung sehen wir weiterhin, dass sieben Variabeln in diesem Modell zum Sales beitragen. Population, Education und Location (Urban und US) haben keinen Einfluss. Wir werden deshalb die aussagekräftigsten vertieft überprüfen.
 
-Die Fehlermeldung bei DiffPrice kommt daher, dass haben wir sie als Differenz von CompPrice und Price berechnet haben. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Deshalb weist es ein NA aus. 
+Die Fehlermeldung bei DiffPrice kommt daher, weil DiffPrice ein abhängier Feature von anderen Feature ist, welches wir in der vorherigen Hypothese erstellt haben. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Aus diesem Grund, weist uns die Auswertung ein NA aus.
 
 #### Sales vs. aussagekräftigste Variabeln und DiffPrice
 ```{r}
@@ -522,7 +521,7 @@ mlr.fit4 <- lm(Sales ~ Income + Advertising + ShelveLoc + Age + DiffPrice, data 
 summary(mlr.fit4)
 ```
 
-Durch die Auswahl der aussagekräftigsten Variabeln konnten wir ein Modell erstellen, dass Sales zuverlässig erklärt. Die verwendeten Variabeln haben wir aus dem Modell, das alle Features verwendet, entnommen. Diese haben dort den tiefsten P-Wert. In diesem Modell haben wir nur (auch in der F-Statistik) sehr tiefe p-Werte und ein ziemlich hohes R^2 von 0.87. Wir überprüfen deshalb nun die Residuen.
+Durch die Auswahl der aussagekräftigsten Variabeln konnten wir ein Modell erstellen, das Sales zuverlässig erklärt. Die verwendeten Variabeln haben wir aus dem Modell entnommen, welche einen tiefen P-Wert aufweisen. In diesem Modell haben wir nur (auch in der F-Statistik) sehr tiefe p-Werte und ein ziemlich hohes R^2 von 0.87. Wir überprüfen deshalb nun die Residuen.
 
 ### Residuenanalyse
 ```{r}
@@ -541,7 +540,7 @@ hist(mlr.fit4$residuals,
 
 Hypothese: Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen.
 
-Unser letztes Modell hat gezeigt, dass mit einer sorgfältigne Auswahl der Variabeln Sales gut und zuverlässig erklärt werden kann. In der Praxis könnten noch mehr Kombinationen (Variabeln, Interaktionen, exponentielle Zusammenhänge etc...) untersucht werden. In dieser Abgabe lassen wir das weg, weil es sich lediglich um Wiederholungen der gezeigten Funktionen handelt.
+Unser letztes Modell hat gezeigt, dass mit einer sorgfältigne Auswahl der Variabeln, Sales gut und zuverlässig erklärt werden kann. In der Praxis könnten noch mehr Kombinationen (Variabeln, Interaktionen, exponentielle Zusammenhänge etc...) untersucht werden. In dieser Abgabe lassen wir das weg, weil es sich um Wiederholungen der gezeigten Funktionen handelt.
 
 # Hypothese 4: Bewohner von urbanen Regionen kaufen weniger Kindersitze als Bürger ländlicher Regionen.
 
@@ -610,8 +609,7 @@ Carseats_ex_medium %>%
        subtitle = "Carseats Datensatz")
 ```
 
-Im ersten Plot wurde drei Variabeln dargestellt. Für ein gutes Vorzeigebeispiel werden wir nur Good und Bad
-berücksichtigen.
+Im ersten Plot wurden drei Variabeln dargestellt. Für ein gutes Vorzeigebeispiel verwenden wir nur Good und Bad.
 
 ### Klassifizierung erstellen
 ```{r}
@@ -628,7 +626,7 @@ logreg.fit2 <- glm(ShelveLoc_binaer ~ Sales, data = Carseats_ex_medium , family 
 summary(logreg.fit2)
 ```
 
-Der sehr tiefe P-Wert weist auf eine hohe Zuverlässigkeit vom Modell hin.
+Ein tiefer P-Wert weist auf eine hohe Zuverlässigkeit vom Modell hin.
 
 Im folgenden Plot wird ersichtlich, dass das Modell bei allen Läden mit Sales > 7.96 den ShelveLoc als Good klassifiziert. Die Berechnung des Wertes haben wir im folgenden Code Chunk auskommentiert.
 
@@ -649,7 +647,7 @@ ggplot(Carseats_ex_medium, aes(x=Sales, y=ShelveLoc_binaer)) +
 ```
 
 ### Evaluierung vom logistischen Model mittels Confusions Matrix
-Um die Genauigkeit des Modelles zu berechnen, erstellen wir eine Confusion Matrix.
+Um die Metriken des Modelles zu berechnen, erstellen wir eine Confusion Matrix.
 
 #### Confusion Matrix erstellen
 ```{r}
@@ -709,7 +707,7 @@ recall
 
 # Zusammenfassung
 
-Mit unseren verwendeten Modellen konnten wir aufzeigen, dass Sales nicht von einzelnen Variabeln, aber von mehreren zusammenhängt. Dank der multiplen linearen Regression konnten wir zuverlässigen Einflussfaktoren aufzeigen.
+Mit unseren verwendeten Modellen konnten wir aufzeigen, dass Sales nicht von einzelnen Variabeln, aber von mehreren zusammenhängt. Dank der multiplen linearen Regression konnten wir zuverlässige Einflussfaktoren aufzeigen.
 
 Dank der logistischen Regression konnten wir darstellen, dass Urban keinen Einfluss hat. Mit dem Weglassen von Medium konnten wir für ShelveLoc ein zuverlässiges Modell erstellen.
 

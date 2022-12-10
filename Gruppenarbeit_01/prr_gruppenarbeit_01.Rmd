@@ -102,14 +102,14 @@ Carseats <- Carseats %>% select(Sales, Price, CompPrice, Advertising, ShelveLoc,
 # Die letzten 6 Observationen ausgeben
 tail(Carseats)
 ```
-Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Berührung und koennen ein Bild der Attribute sowie Observationen machen.
+Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Berührung und können ein Bild der Attribute sowie Observationen machen.
 
 ### Informationen zum Datensatz herausfinden
 ```{r}
 # Informationen zum DataFrame ausgeben
 str(Carseats)
 ```
-Durch str wird und die grösse des DataFrames angezeigt sowie die anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp. Weiter erkennen wir auch einige Werte die in der Spalte vorkommen. 
+Durch str wird und die grösse des Dataframes angezeigt, sowie die Anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp und auch einige Werte die in der Spalte vorkommen. 
 
 ### Reihenfolge von ShelveLoc definieren
 ```{r}
@@ -155,8 +155,8 @@ ggplot(data = Carseats, aes(x = Sales, fill = Urban)) +
 ```
 Analog zur ersten Visualisierung betrachten wir hier die Dichteverteilung von Sales mit der Auftrennung
 von Urban (ja/nein), sprich können wir mit diesem Plot unterschiede zwischen Urbanen Regionen (städtische oder ländliche)
-Sales betrachten. In unserem Fall gibt es keinen grosse Unterschied, man erkennt ganz leicht das bei
-Sales in nicht ländlichen Regionen diese im Sales Bereich 8 grösser ist als bei Städtischen Regionen. 
+Sales betrachten. In unserem Fall gibt es keinen grosse Unterschied, man erkennt ganz leicht, das 
+Sales in nicht ländlichen Regionen diese im Sales Bereich grösser ist als bei Städtischen Regionen. 
 
 #### Multiplots Verteilungen von Sales
 ```{r}
@@ -170,11 +170,11 @@ ggplot(Carseats, aes(x = Sales, fill = US)) +
 
 ```
 In diesem Multiplot unterteilen wir die Dichteverteilung nach weiteren Kategorien, 
-wie Urban und ShelveLoc. Auch unterteilen wir farblich, ob sich das Geschaeft in den US 
-befindet oder nicht, damit wir ein Gefuehl fuer die Sales Verteilung mit verschiedenen 
-Kategorischen Werten kriegen. Aufaellig ist, dass die Verteilungen bei ShelveLoc Bad 
+wie Urban und ShelveLoc. Auch unterteilen wir farblich, ob sich das Geschäft in den US 
+befindet oder nicht, damit wir ein Gefühl für die Sales Verteilung mit verschiedenen 
+Kategorischen Werten kriegen. Aufällig ist, dass die Verteilungen bei ShelveLoc Bad 
 deutlich weiter Links sind (Mittelwert tiefer als bei ShelveLoc Medium und Good). 
-Auch erkennen wir bei ShelveLoc Good, das die Kindersitze in den nicht US laendern 
+Auch erkennen wir bei ShelveLoc Good, dass die Kindersitze in den nicht US Ländern 
 weniger verkauft werden als in den US selber. 
 
 #### Multiplots Verteilungen von Price
@@ -188,11 +188,11 @@ ggplot(Carseats, aes(x = Price, fill = US)) +
        subtitle = "Carseats Datensatz")
 
 ```
-Analog zum Sales multiplot erstellen wir ein Multiplot von Price, um eine Uebersicht von Price 
+Analog zum Sales multiplot erstellen wir ein Multiplot von Price, um eine Übersicht von Price 
 mit unterschiedlichen Kategorien zu kriegen. Wir erkennen, dass bei ShelveLoc Good und Urbanen 
-Regionen die Preise in den US deutlich hoeher sind als in nicht US Laendern. Auch erkennen wir
-bei ShelveLoc Bad und nicht Urbanen Regionen, das die Preise fuer einen Kindersitz bei nicht US
-Laendern teurer sind.
+Regionen die Preise in den US deutlich höher sind als in nicht US Ländern. Auch erkennen wir
+bei ShelveLoc Bad und nicht Urbanen Regionen, das die Preise für einen Kindersitz bei nicht US
+Ländern teurer sind.
 
 # Hypothese 1: Sales ist abhängig von Income/Advertising/Population der Region.
 Thema: Einfache lineare Regression
@@ -205,7 +205,7 @@ plot(Sales ~ Income, data = Carseats,
      main = "Sales vs Income", pch=21, bg = "lightblue")
 ```
 
-Bevor wir mit der Linearen Regression beginnen, erstellen wir zuerst ein Streudiagramm von beiden Variabeln, um die Zusammenhaenge zu visualiseren. Hier erkennen wir im Plot, dass die Variabeln Einkommen und Sales nicht besonders stark korrelieren, da die Punkte ueberall im Plot verstreut sind. 
+Bevor wir mit der Linearen Regression beginnen, erstellen wir zuerst ein Streudiagramm von beiden Variabeln, um die Zusammenhänge zu visualiseren. Hier erkennen wir im Plot, dass die Variabeln Einkommen und Sales nicht besonders stark korrelieren, da die Punkte überall im Plot verstreut sind. 
 
 ### Modell erstellen
 ```{r}
@@ -219,7 +219,7 @@ Mit der Funktion "lm()" wird das Lineare Modell erstellt und trainiert.
 summary(lm.fit1)
 ```
 
-R hat nun die linear Regression erstellt. Die wichtigsten Werte lassen sich mit der Methode summary() anzeigen.Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Einkommen steigt der Verkauf um 15 Stück. Dies erscheint im Verhältnis zum Intercept wenig, es müsste darüber diskutiert werden, ob dieser Erkenntnis für einen möglichen Kunden aussagekräftig ist.Anhand vom P Wert (0.00231) lässt sich aber feststellen, dass die Steigung siginfikant ist. Das Einkommen der Region hat also einen Einfluss auf die Verkaufszahlen. Vor einer endültigen Aussage müssen aber weitere Untersuchungen, wie die Überprüfung der Residuen, durchgeführt werden. Diese Untersuchung führen wir später durch.
+R hat nun die linear Regression erstellt. Die wichtigsten Werte lassen sich mit der Methode summary() anzeigen. Der Intercept beträgt 6.44 und die Steigung 0.015. Pro 1'000 Dollar höheres Einkommen steigt der Verkauf um 15 Stück. Dies erscheint im Verhältnis zum Intercept wenig, es müsste darüber diskutiert werden, ob dieser Erkenntnis für einen möglichen Kunden aussagekräftig ist.Anhand vom P Wert (0.00231) lässt sich aber feststellen, dass die Steigung siginfikant ist. Das Einkommen der Region hat also einen Einfluss auf die Verkaufszahlen. Vor einer endgültigen Aussage müssen aber weitere Untersuchungen, wie die Überprüfung der Residuen, durchgeführt werden. Diese Untersuchung führen wir später durch.
 
 ### Übersicht der Modell Methoden
 ```{r}

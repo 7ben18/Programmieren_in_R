@@ -97,7 +97,7 @@ Im ganzen Datensatz haben wir zu viele Variablen um eine verständliche Visualis
 | usp200s0  | g/kg    | Spezifische Luftfeuchtigkeit 2 m über Boden; Momentanwert                       |
 | pvaices0  | hPa     | Sättigungsdampfdruck über Eis; Momentanwert                                     |
 
-Leider sind die meisten hohen Korrelationen keine richtige Korrelationen, sondern zwei Variablen, welche etwas ähnliches beschreiben oder physikalische Zusammenhänge. Beispiel dafür ist die Korrelation von sre000z0 (Sonnenscheindauer) und gre000z0 (Globalstrahlung).
+Leider sind die meisten hohen Korrelationen keine richtige Korrelationen, sondern zwei Variablen, welche etwas ähnliches beschreiben oder physikalische Zusammenhänge sind. Beispiel dafür ist die Korrelation von sre000z0 (Sonnenscheindauer) und gre000z0 (Globalstrahlung).
 
 Wir entscheiden uns grundsätzlich für diese Werte:
 
@@ -332,7 +332,7 @@ Markierung beim Plot:
 Die mittlere Temperatur befindet sich tatsächlich zwischen vier und fünf Uhr am tiefsten Punkt. Da der berechnete früheste Sonnenenaufgang im Jahr 2020 kurz nach 05:30 (auf dem Berg oben vermutlich noch früher) war, bestätigen wir unsere Hypothese.
 
 ## Die Sonne scheint auf dem Jungfraujoch das ganze Jahr etwa gleich lange.
-Zur Beantwortung der Hypothese berechnen wir die die Anzahl Stunden, an welchen die Sonne gescheint hat. Dies machen wir mit der Granularität von einer Stunde. 
+Zur Beantwortung der Hypothese berechnen wir die Anzahl Stunden, an welchen die Sonne gescheint hat. Dies machen wir mit der Granularität von einer Stunde. 
 
 ### Erstellung der Funktion für einfaches Plotten
 ```{r}

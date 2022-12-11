@@ -10,10 +10,10 @@ output:
 # Lineare und logistische Regressionen in R
 
 Für die erste Abgabe im Modul PRR beschäftigen wir uns mit (multiplen) linearen und
-logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an. Datensatz von ISRL2.
+logistischen Regressionen. Diese Funktionen wenden wir auf den Datensatz "Carseats" an.
 Wir haben uns für diese Methoden entschieden, weil sie ein zentraler Bestandteil von Data Science sind. Sie wird verwendet, um Zusammenhängen in Datensätze zu verstehen und um Prognosen erstellen zu können. Diese Regressionen sind im R Grundpakte enthalten. Es muss also keine separate Library installiert und geladen werden.
 
-Carseats ist ein **generischer** Datensatz, der im Buch "An Introduction to Statistical Learning" verwendet wird. Dieses Buch erarbeiten wir in diesem Studiengang im Modul "Statistisches Lernen". Dort wird er zwar hauptsächlich angewendet um Decision Trees zu erstellen. Dank 11 Variablen und 400 Observationen eignet er sich aber auch gut für Regressionen. Jede Zeile im Datensatz entspricht einem Verkaufslokal, gejoint mit Durchschnittsstatitistiken für das Einzugsgebiet des Lokals. Für eine genau Erklärung der Variablen verweisen wir auf die Homepage https://rdrr.io/cran/ISLR2/man/Carseats.html. Für die unten stehenden Hypothesen werden wir mit folgenden Variablen arbeiten:
+Carseats ist ein **generischer** Datensatz, der im Buch "An Introduction to Statistical Learning" verwendet wird. Dieses Buch erarbeiten wir in diesem Studiengang im Modul "Statistisches Lernen". Dort wird er zwar hauptsächlich angewendet, um Decision Trees zu erstellen. Dank 11 Variablen und 400 Observationen eignet er sich aber auch gut für Regressionen. Jede Zeile im Datensatz entspricht einem Verkaufslokal, gejoint mit Durchschnittsstatitistiken für das Einzugsgebiet des Lokals. Für eine genau Erklärung der Variablen verweisen wir auf die Homepage https://rdrr.io/cran/ISLR2/man/Carseats.html. Für die unten stehenden Hypothesen werden wir mit folgenden Variablen arbeiten:
 
 - Sales: Verkaufte Anzahl Kindersitze pro Standort in 1'000 Stück
 - CompPrice: Verkaufte Anzahl Kindersitze von Konkurrenten in 1'000 Stück
@@ -45,7 +45,7 @@ Formel vektorisiert: y = f(X) = X $\cdot$ $\vec{\beta_{n}}$ + $\beta_{0}$
 Das Wissen wird immersiv durch die Module llr, mlr und stl abgedeckt.
 
 # Logistische Regression
-Bei der Logistischen Regression versucht man eine Binäre Zielvariable in Abhängigkeit durch **eine** andere Variable vorherzusagen. 
+Bei der Logistischen Regression versucht man eine binäre Zielvariable in Abhängigkeit durch **eine** andere Variable vorherzusagen. 
 
 Sigmoid Formel: $\sigma(z) = \frac{1}{1 + e^{-z}}$
 
@@ -102,14 +102,14 @@ Carseats <- Carseats %>% select(Sales, Price, CompPrice, Advertising, ShelveLoc,
 # Die letzten 6 Observationen ausgeben
 tail(Carseats)
 ```
-Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Berührung und können ein Bild der Attribute sowie Observationen machen.
+Durch die Ausgabe von Kopfzeile und Fusszeile kommen wir mit dem Datensatz in Berührung und können uns ein Bild der Attribute sowie Observationen machen.
 
 ### Informationen zum Datensatz herausfinden
 ```{r}
 # Informationen zum DataFrame ausgeben
 str(Carseats)
 ```
-Durch str wird und die grösse des Dataframes angezeigt, sowie die Anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp und auch einige Werte die in der Spalte vorkommen. 
+Durch str wird uns die Grösse des Dataframes angezeigt, sowie die Anzahl an Features (Spalten). Weiter erkennen wir von jeder Spalte den Datenyp und auch einige Werte, die in der Spalte vorkommen. 
 
 ### Reihenfolge von ShelveLoc definieren
 ```{r}
@@ -121,7 +121,7 @@ Carseats$ShelveLoc <- factor(Carseats$ShelveLoc, ordered = TRUE, levels = c("Goo
 # Statistische Kennzahlen 
 summary(Carseats)
 ```
-wir geben von jeder numerischen Spalte die summarischen Statistiken aus. 
+Wir geben von jeder numerischen Spalte die summarischen Statistiken aus. 
 Darin enthalten sind: Minimum, 1. Quantil, Median, Mittelwert, 3. Quantil, Maximum.
 Im summary() werden auch die Anzahl fehlende Werte angezeigt. 
 In unserem Fall besitzt der Datensatz keine fehlende Werte.
@@ -139,7 +139,7 @@ ggplot(data = Carseats, aes(x = Sales)) +
        subtitle = "Carseats Datensatz")
 ```
 
-Hier in diesem Dichte-Diagramm erkennen wir die Verteilung der numerischen Variabel Sales.
+In diesem Dichte-Diagramm erkennen wir die Verteilung der numerischen Variabel Sales.
 Die y Achse ist die Wahrscheinlichkeit für das Auftreten einer numerischen Sales Variabel. 
 Aus diesem Grund wird die Dichtefunktion auch oft Wahrscheinlichkeitsdichtefunktion genannt. 
 Sie ist eine gegelättete Version des Histogramm und wird oft nach dem gleichen Konzept verwendet. 
@@ -155,7 +155,7 @@ ggplot(data = Carseats, aes(x = Sales, fill = Urban)) +
 ```
 Analog zur ersten Visualisierung betrachten wir hier die Dichteverteilung von Sales mit der Auftrennung
 von Urban (ja/nein), sprich können wir mit diesem Plot unterschiede zwischen Urbanen Regionen (städtische oder ländliche)
-Sales betrachten. In unserem Fall gibt es keinen grosse Unterschied, man erkennt ganz leicht, das 
+Sales betrachten. In unserem Fall gibt es keinen grosse Unterschied, man erkennt ganz leicht, dass 
 Sales in nicht ländlichen Regionen diese im Sales Bereich grösser ist als bei Städtischen Regionen. 
 
 #### Multiplots Verteilungen von Sales
@@ -171,7 +171,7 @@ ggplot(Carseats, aes(x = Sales, fill = US)) +
 ```
 In diesem Multiplot unterteilen wir die Dichteverteilung nach weiteren Kategorien, 
 wie Urban und ShelveLoc. Auch unterteilen wir farblich, ob sich das Geschäft in den US 
-befindet oder nicht, damit wir ein Gefühl für die Sales Verteilung mit verschiedenen 
+befindet oder nicht, damit wollen wir ein Gefühl für die Sales Verteilung mit verschiedenen 
 Kategorischen Werten kriegen. Aufällig ist, dass die Verteilungen bei ShelveLoc Bad 
 deutlich weiter Links sind (Mittelwert tiefer als bei ShelveLoc Medium und Good). 
 Auch erkennen wir bei ShelveLoc Good, dass die Kindersitze in den nicht US Ländern 
@@ -249,7 +249,7 @@ plot(Sales ~ Income, data = Carseats,
 abline(lm.fit1, col = "red")
 ```
 
-Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot erkennen wir, dass Income und Sales eine Punktwolke bilden. Sales streut auf der ganzen X Achse von maximalen bis minimalen beobaachteten Wert (0 - 15). Entsprechend korrelieren beide Variabeln wenig miteinander. Es gibt keinen klaren Zusammenhang. 
+Das Modell lässt sich direkt mit der Plotfunktion darstellen. Mit abline() lassen sich Linien zeichnen, in diesem Fall die lineare Regression. Im Plot erkennen wir, dass Income und Sales eine Punktwolke bilden. Sales streut auf der ganzen X Achse von maximalen bis minimalen beobachteten Wert (0 - 15). Entsprechend korrelieren beide Variabeln wenig miteinander. Es gibt keinen klaren Zusammenhang. 
 
 ### Residuenanalyse
 ```{r}
@@ -271,16 +271,17 @@ Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residue
 
 Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
 
-Ueberpreufen vom Erwartungswert = 0 und Normalverteilt:
+Überprüfen vom Erwartungswert = 0 und Normalverteilt:
 ```{r}
 hist(lm.fit1$residuals, 
      main = "Verteilung der Residuen", col = "lightblue") 
 ```
+
 ### Interpretation
 
-Hypothese: Sales ist abhängig von Income?
+Hypothese: Sales ist abhängig von Income
 
-Wir erkennen aufgrund des Streudiagramm, dass eine Korrelation zwischen einkommen und Sales kaum vorhanden ist. Das Lineare Modell hat einen R^2 von 0.02, dies bestaetigt die Aussage. 
+Wir erkennen aufgrund des Streudiagramm, dass eine Korrelation zwischen Einkommen und Sales kaum vorhanden ist. Das Lineare Modell hat einen R^2 von 0.02, dies bestätigt die Aussage. 
 
 Aus diesem Grund ist Sales nicht abhängig von Income.
 
@@ -328,17 +329,18 @@ Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funkti
 
 Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht einem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
-Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
+Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen und ob sich deren Mittelwert  um 0 verteilt.
 
 ```{r}
 hist(lm.fit2$residuals, 
      main = "Verteilung der Residuen", col = "lightblue") 
 ```
+
 ### Interpretation
 
-Hypothese: Sales ist abhängig von Population?
+Hypothese: Sales ist abhängig von Population
 
-Leider auch hier, ähnlich wie zu Sales vs. Income erkennen wir keinen Trend. Der R^2 Score beträgt 0.002547, also auch kein Gutes Modell. 
+Leider auch hier, ähnlich wie zu Sales vs. Income erkennen wir keinen Trend. Der R^2 Score beträgt 0.002547, es handelt sich also auch um kein verlässliches Modell. 
 
 Aus diesem Grund, stimmt auch diese Hypothese nicht.
 
@@ -384,7 +386,7 @@ Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funkti
 
 Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
-Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
+Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen und ob sich deren Mittelwert um 0 verteilt.
 
 ```{r}
 hist(lm.fit3$residuals, 
@@ -393,13 +395,13 @@ hist(lm.fit3$residuals,
 
 ### Interpretation
 
-Hypothese: Sales ist abhängig von Advertising?
+Hypothese: Sales ist abhängig von Advertising
 
-Leider auch bei Advertising und Sales ist kein linearer Zusammenhang erslichtlich. In der 3. Hypothese beschäftigen wir uns mit der multiplen Linearen Regression, diese wird bestimmt besser sein als bei der Linearen Regression. 
+Leider ist auch bei Advertising und Sales kein linearer Zusammenhang erslichtlich. In der 3. Hypothese beschäftigen wir uns mit der multiplen Linearen Regression, wir erwarten, dass sie besser sein wird. 
 
 ## Interpretation von Hypothese 1
 
-Keiner der Linearen Modelle hat einen Linearen Zusammenhang. Mit einem einfachen Linearen Modell ist es nicht möglich Sales vorherzusagen. 
+Keines der Linearen Modelle hat einen Linearen Zusammenhang. Mit einem einfachen Linearen Modell ist es nicht möglich, Sales vorherzusagen. 
 
 # Hypothese 2: Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
 
@@ -458,7 +460,7 @@ Auch dafür bietet R einfache Möglichkeiten an. Mit der folgenden beiden Funkti
 
 Im ersten Plot oben links (Tukeyanscombe Plot) wird ersichtich, dass die Residuen/Fehler unabhängig von einander sind und nicht keinem Muster folgen. Auch dieses Kriterium ist somit erfüllt.
 
-Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen, ob deren Mittelwert sich um 0 Verteilt.
+Die Verteilung der Residuen lässt sich einfach im Histogramm überprüfen und ob sich deren Mittelwert um 0 verteilt.
 
 ```{r}
 hist(lm.fit4$residuals, 
@@ -469,9 +471,9 @@ hist(lm.fit4$residuals,
 
 Hypothese: Die Differenz von Comprice und Price hat einen Einfluss auf den Verkauf.
 
-Die zweite Hypothese hat einen deutlich besseren R^2 Score verglichen zu den ersten drei Modellen bei der Hypothese 1. Die Differenz von Comprice und Price hat keinen grossen Einfluss auf Sales, weil das Bestimmtheitsmass 0.3575 beträgt. 
+Die zweite Hypothese hat einen deutlich besseren R^2 Score verglichen zu den ersten drei Modellen bei der Hypothese 1. Die Differenz von Comprice und Price hat aber keinen grossen Einfluss auf Sales, weil das Bestimmtheitsmass 0.3575 beträgt. Weil sich die Residuen also nur teilweise durch das Modell erklären lassen, verwerfen wir auch die zweite Hypothese.
 
-Es ist interessant zu erkennen, dass der Preisunterschied zwischen der Konkurrenz und dem Produkt einen ganz leichten negativen Trend zeigt. Nichts destotrotz, sind wir mit diesem Modell nicht zufrieden und begeben uns direkt in die Hypothese 3. 
+Es ist interessant zu erkennen, dass der Preisunterschied zwischen der Konkurrenz und dem Produkt einen ganz leichten negativen Trend zeigt. Nichts destotrotz, sind wir mit diesem Modell nicht zufrieden und begeben uns direkt zur Hypothese 3. 
 
 # Hypothese 3: Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen.
 
@@ -479,7 +481,7 @@ Thema: Multiple lineare Regression
 
 ## Sales vs. mehrere Features
 
-Nachdem wir festgestellt haben, dass sich Sales nicht durch einzelne Variabeln erklären lasst, untersuchen wir die Möglichkeit, ob Sales sich durch mehrere Features erklären lässt. Wir werden sie zuerst gegenüber zwei Variabel untersuchen. Danach schauen wir uns den ganzen Datensatz an und behalten danach die aussagekräftigsten Variabeln.
+Nachdem wir festgestellt haben, dass sich Sales nicht durch einzelne Variabeln erklären lasst, untersuchen wir die Möglichkeit, ob Sales sich durch mehrere Features erklären lässt. Wir werden sie zuerst gegenüber zwei Variabel untersuchen. Danach schauen wir uns den ganzen Datensatz an und behalten die aussagekräftigsten Variabeln.
 
 ### Modelle erstellen und Auswertungen
 
@@ -501,7 +503,7 @@ mlr.fit2 <- lm(Sales ~ Income * Population, data = Carseats)
 summary(mlr.fit2)
 ```
 
-Hier haben wir untersucht, ob die Variabeln Income und Population nicht nur additiv einen Einfluss haben, sondern ob sie auch gemeinsam Wirken (Interaktion/Synergie). Das ist in diesem Fall aber nicht gegeben. 
+Hier haben wir untersucht, ob die Variabeln Income und Population nicht nur additiv einen Einfluss haben, sondern ob sie auch gemeinsam wirken (Interaktion/Synergie). Das ist in diesem Fall aber nicht gegeben (P-Wert von 0.129 ist zu hoch). 
 
 #### Sales vs. alle Variabeln
 ```{r}
@@ -511,9 +513,9 @@ summary(mlr.fit3)
 
 Mit dem Code "Sales ~ ." können wir ein Regressionsmodell Sales gegenüber allen Variabeln erstellen.
 
-Dank der Auswertung sehen wir weiterhin, dass sieben Variabeln in diesem Modell zum Sales beitragen. Population, Education und Location (Urban und US) haben keinen Einfluss. Wir werden deshalb die aussagekräftigsten vertieft überprüfen.
+Dank der Auswertung sehen wir, dass sieben Variabeln in diesem Modell zum Sales beitragen. Population, Education und Location (Urban und US) haben keinen Einfluss. Wir werden nun die aussagekräftigsten vertieft überprüfen.
 
-Die Fehlermeldung bei DiffPrice kommt daher, weil DiffPrice ein abhängier Feature von anderen Feature ist, welches wir in der vorherigen Hypothese erstellt haben. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Aus diesem Grund, weist uns die Auswertung ein NA aus.
+Die Fehlermeldung bei DiffPrice kommt daher, weil DiffPrice ein abhängies Feature von anderen Feature (Differenz aus CompPrice und Price) ist, welches wir in der vorherigen Hypothese erstellt haben. Das lineare Modell erkennt, dass DiffPrice in diesem Fall keine zusätzliche Information zum Modell beiträgt. Aus diesem Grund, weist uns die Auswertung ein NA aus.
 
 #### Sales vs. aussagekräftigste Variabeln und DiffPrice
 ```{r}
@@ -540,7 +542,7 @@ hist(mlr.fit4$residuals,
 
 Hypothese: Sales lässt sich durch die Verwendung von mehreren Features zuverlässiger vorhersagen.
 
-Unser letztes Modell hat gezeigt, dass mit einer sorgfältigne Auswahl der Variabeln, Sales gut und zuverlässig erklärt werden kann. In der Praxis könnten noch mehr Kombinationen (Variabeln, Interaktionen, exponentielle Zusammenhänge etc...) untersucht werden. In dieser Abgabe lassen wir das weg, weil es sich um Wiederholungen der gezeigten Funktionen handelt.
+Unser letztes Modell hat gezeigt, dass mit einer sorgfältigen Auswahl der Variabeln, Sales gut und zuverlässig erklärt werden kann. In der Praxis könnten noch mehr Kombinationen (Variabeln, Interaktionen, exponentielle Zusammenhänge etc...) untersucht werden. In dieser Abgabe lassen wir das weg, weil es sich um Wiederholungen der gezeigten Funktionen handelt.
 
 # Hypothese 4: Bewohner von urbanen Regionen kaufen weniger Kindersitze als Bürger ländlicher Regionen.
 
@@ -577,7 +579,7 @@ logreg.fit1 <- glm(Urban_binaer ~ Sales, data = Carseats , family = binomial)
 summary(logreg.fit1)
 ```
 
-Wie wir aufgrund der Visualisierung erkannt haben, ergibt ein logistishes Regressionsmodell einen grossen P>|z| Wert. Somit gibt es keinen logistischen Zusammenhang zwischen Sales und Urban.
+Wie wir aufgrund der Visualisierung erkannt haben, ergibt ein logistisches Regressionsmodell einen grossen P>|z| Wert. Somit gibt es keinen logistischen Zusammenhang zwischen Sales und Urban.
 
 Gegenüber der lineare Regression haben wir den Parameter "family = binomial" erfasst.
 

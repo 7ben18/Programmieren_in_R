@@ -1,11 +1,11 @@
 ---
 title: "prr Gruppenarbeit 2"
 subtitle: "Studiengang Data Science (HS2022), FHNW"
-author: "Patrick Schürmann, Si Ben Tran, Gabriel Torres"
+author: "Patrick Schürmann, Si Ben Tran, Gabriel Torres Gamez"
 date: "Letzte Aktualisierungen: `r format(Sys.time(), '%B %d, %Y')`"
 output:
   bookdown::html_document2:
-      code_folding: hide
+      code_folding: show
       toc: true
       toc_depth: 2
       toc_float: true
@@ -15,18 +15,25 @@ editor_options:
 ---
 
 # Einleitung
-Wir beschäftigen uns mit den Daten des Bundesamt für Meteorologie. Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020. Diese Daten haben wir vom [IDAWEB des Bundesamts für Meteorologie](https://gate.meteoswiss.ch/idaweb/login.do) erhalten. Der Bestellschein ist im Anhang enthalten.
+Wir beschäftigen uns mit den Daten des Bundesamts für Meteorologie. 
+Wir haben dafür einen Export der Wetterstation Jungfraujoch (3571 m ü.M.) vom Jahr 2020. 
+Diese Daten haben wir vom [IDAWEB des Bundesamts für Meteorologie](https://gate.meteoswiss.ch/idaweb/login.do) erhalten. 
+Der Bestellschein ist im Anhang enthalten.
 
 In diesem Notebook nutzen wir Plotly, um interaktive Time Series Plots zu generieren.
-Plotly ist eine benutzerfreundliche Datenvisualisierungssoftware, die hochentwickelte Visualisierungswerkzeuge bietet. Das Hinzufügen von Interaktion zu Visualisierungen eröffnet eine grosse Vielfalt an Möglichkeiten. wir können verschiedene Visualisierungen derselben Daten auf Abruf präsentieren, zoomen, schwenken, filtern und scrollen implementieren. Anbei findet man die Dokumentation von Plotly unter folgenden Link: https://plotly.com/r/.
+Plotly ist eine benutzerfreundliche Datenvisualisierungssoftware, die hochentwickelte Visualisierungswerkzeuge bietet. 
+Das Hinzufügen von Interaktion zu Visualisierungen eröffnet eine grosse Vielfalt an Möglichkeiten.
+Wir können verschiedene Visualisierungen derselben Daten auf Abruf präsentieren, zoomen, schwenken, filtern und scrollen implementieren. 
+Anbei findet man die Dokumentation von Plotly unter folgenden Link: https://plotly.com/r/.
 
-Während Plotly und GGplot beide Visualisierungen generieren, haben beide Vor- und Nachteile.
-GGplot kann mit einer sehr simplen Syntax verwendet werden, es lassen sich aber sehr einfach und modular Komplexitäten einbauen. Die Library bietet eine grosse Bandbreite an visuellen Möglichkeiten.
-Allerdings verwendet GGplot2 eine unterschiedliche Syntax als restliches R. Aus unsere Sicht ist der grösste Nachteil, dass keine interaktiven Plots möglich sind.
+Während Plotly und ggplot2 beide Visualisierungen generieren, haben beide Vor- und Nachteile.
+Die Library ggplot2 kann mit einer sehr simplen Syntax verwendet werden, es lassen sich aber sehr einfach und modular Komplexitäten einbauen. 
+Die Library bietet eine grosse Bandbreite an visuellen Möglichkeiten.
+Allerdings verwendet ggplot2 eine unterschiedliche Syntax als restliches R. Aus unserer Sicht ist der grösste Nachteil, dass keine interaktiven Plots möglich sind.
 
 Genau dieses Manko füllt Plotly, welches automatisch interaktive Grafiken erstellt. Sobald also dem Anwender Möglichkeiten wie die Auswahl von Daten, Zoom oder Selektion von Punkten ermöglicht werden sollen, ist Plotly die Alternative. Die kleinere Anzahl von Farbpaletten ist in diesem Fall nur ein kleiner Wehrmutstropfen.
 
-# Hypothese / Fragestellungen
+# Hypothesen / Fragestellungen
 1) Es gibt viele ausgeprägte Korrelationen zwischen den verschiedenen Variablen.
 2) Über das ganze Jahr (2020) blieb die mittlere Tagestemperatur unter 0°C.
 3) Auf dem Jungfraujoch ist es kurz vor Sonnenaufgang am kältesten.

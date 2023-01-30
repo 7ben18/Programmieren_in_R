@@ -4,4 +4,4 @@
 
 - Gruppenarbeit_02
 
-In Zusammenarbeit mit Patrick Schürmann
+Patrick Schürmann, Gabriel Games Torrez, Si Ben Tran
